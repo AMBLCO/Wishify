@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -25,6 +27,10 @@ public class SongsFragment extends Fragment {
     {
         this.view = view;
         recView = view.findViewById(R.id.songs_rec_view);
-
+        SongsAdapter adapter = new SongsAdapter();
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recView.setLayoutManager(layoutManager);
+        recView.setItemAnimator(new DefaultItemAnimator());
+        recView.setAdapter(adapter);
     }
 }
