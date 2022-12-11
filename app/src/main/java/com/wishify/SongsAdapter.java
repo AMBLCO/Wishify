@@ -19,6 +19,15 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
     public SongsAdapter()
     {
         testDataSet.add(new Song("Name1", "Artist1", "Album1"));
+        testDataSet.add(new Song("Name2", "Artist2", "Album2"));
+        testDataSet.add(new Song("Name3", "Artist3", "Album3"));
+        testDataSet.add(new Song("Name4", "Artist4", "Album4"));
+        testDataSet.add(new Song("Name5", "Artist5", "Album5"));
+        testDataSet.add(new Song("Name6", "Artist6", "Album6"));
+        testDataSet.add(new Song("Name7", "Artist7", "Album7"));
+        testDataSet.add(new Song("Name8", "Artist8", "Album8"));
+        testDataSet.add(new Song("Name9", "Artist9", "Album9"));
+        testDataSet.add(new Song("Name10", "Artist10", "Album10"));
     }
 
     @NonNull

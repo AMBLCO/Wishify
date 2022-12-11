@@ -1,16 +1,22 @@
 package com.wishify;
 
+import static android.graphics.drawable.ClipDrawable.HORIZONTAL;
+import static android.graphics.drawable.ClipDrawable.VERTICAL;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Objects;
 
 
 public class SongsFragment extends Fragment {
@@ -32,5 +38,7 @@ public class SongsFragment extends Fragment {
         recView.setLayoutManager(layoutManager);
         recView.setItemAnimator(new DefaultItemAnimator());
         recView.setAdapter(adapter);
+        DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), HORIZONTAL);
+        recView.addItemDecoration(decoration);
     }
 }
