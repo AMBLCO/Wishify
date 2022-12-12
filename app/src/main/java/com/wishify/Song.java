@@ -8,6 +8,7 @@ public class Song {
     private String artist;
     private String album;
     private Image cover;
+    private int timeLength;
 
     public Song(String title, String artist, String album)
     {

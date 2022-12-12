@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkRequest;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -89,6 +91,12 @@ public class MainActivity extends AppCompatActivity {
                 else { return false; }
             }
         });
+
+        // WorkManager
+
+
+
+
     }
 
     @Override
