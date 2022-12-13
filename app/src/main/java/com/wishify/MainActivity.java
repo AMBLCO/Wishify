@@ -11,6 +11,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkRequest;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,6 +22,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
+
+    Intent audioPlayerServiceIntent;
 
     // Arbitrary Constants
     private static final int READ_MEDIA_AUDIO_CODE = 10;
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         // Request permission and crawl
         checkPerm(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
 
-
+        audioPlayerServiceIntent = new Intent(this, AudioPlayerService.class);
     }
 
     @Override
@@ -155,6 +158,16 @@ public class MainActivity extends AppCompatActivity {
                 // We did not get perm granted
             }
         }
+    }
+
+    private void playAudio(long id) {
+        audioPlayerServiceIntent.putExtra("file", id);
+        audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
+        startService(audioPlayerServiceIntent);
+    }
+
+    private void stopAudio() {
+        stopService(audioPlayerServiceIntent);
     }
 
 }

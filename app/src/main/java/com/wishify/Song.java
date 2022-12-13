@@ -9,6 +9,7 @@ public class Song {
     private String album;
     private Image cover;
     private int timeLength;
+    private long id;
 
     public Song(String title, String artist, String album)
     {
@@ -48,4 +49,8 @@ public class Song {
     public void setCover(Image cover) {
         this.cover = cover;
     }
+
+    public long getId() { return id; }
+
+    public void setId(long id) { this.id = id; }
 }

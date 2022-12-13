@@ -1,6 +1,9 @@
 package com.wishify;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -25,7 +28,7 @@ public class FileDiscoveryWorker extends Worker{
 
     private void discoverAudioFiles()
     {
-
+        //Ne pas oublier d'ajouter l'id de chaque fichier découvert à chaque instance de Song dans la liste
     }
 
 }
