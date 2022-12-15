@@ -101,7 +101,10 @@ public class MainActivity extends AppCompatActivity {
                                 .setReorderingAllowed(true)
                                 .replace(R.id.mainFragmentContainerView, SongsFragment.class, null)
                                 .commit();
-
+                        //SongsFragment songsFragment = ((SongsFragment) getSupportFragmentManager().findFragmentById(R.id.mainFragmentContainerView));
+                        //if (songsFragment != null) {
+                            //songsFragment.setmMainActivity(MainActivity.this);
+                        //}
                     }
                     return true;
                 }
@@ -179,11 +182,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void playAudio(long id) {
+
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
         audioPlayerServiceIntent.putExtra("file", id);
         audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
         startService(audioPlayerServiceIntent);
-
-        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     public void stopAudio() {

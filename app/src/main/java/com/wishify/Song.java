@@ -11,11 +11,12 @@ public class Song {
     private int timeLength;
     private long id;
 
-    public Song(String title, String artist, String album)
+    public Song(String title, String artist, String album, long id)
     {
         this.title = title;
         this.artist = artist;
         this.album = album;
+        this.id = id;
     }
 
     public String getTitle() {

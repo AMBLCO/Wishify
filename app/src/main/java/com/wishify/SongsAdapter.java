@@ -15,19 +15,22 @@ import java.util.ArrayList;
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 {
     private final ArrayList<Song> testDataSet = new ArrayList<>();
+    private MainActivity mainActivity;
 
-    public SongsAdapter()
+
+    public SongsAdapter(MainActivity mainActivity)
     {
-        testDataSet.add(new Song("Name1", "Artist1", "Album1"));
-        testDataSet.add(new Song("Name2", "Artist2", "Album2"));
-        testDataSet.add(new Song("Name3", "Artist3", "Album3"));
-        testDataSet.add(new Song("Name4", "Artist4", "Album4"));
-        testDataSet.add(new Song("Name5", "Artist5", "Album5"));
-        testDataSet.add(new Song("Name6", "Artist6", "Album6"));
-        testDataSet.add(new Song("Name7", "Artist7", "Album7"));
-        testDataSet.add(new Song("Name8", "Artist8", "Album8"));
-        testDataSet.add(new Song("Name9", "Artist9", "Album9"));
-        testDataSet.add(new Song("Name10", "Artist10", "Album10"));
+        testDataSet.add(new Song("Name1", "Artist1", "Album1", 0));
+        testDataSet.add(new Song("Name2", "Artist2", "Album2", 0));
+        testDataSet.add(new Song("Name3", "Artist3", "Album3", 0));
+        testDataSet.add(new Song("Name4", "Artist4", "Album4", 0));
+        testDataSet.add(new Song("Name5", "Artist5", "Album5", 0));
+        testDataSet.add(new Song("Name6", "Artist6", "Album6", 0));
+        testDataSet.add(new Song("Name7", "Artist7", "Album7", 0));
+        testDataSet.add(new Song("Name8", "Artist8", "Album8", 0));
+        testDataSet.add(new Song("Name9", "Artist9", "Album9", 0));
+        testDataSet.add(new Song("Name10", "Artist10", "Album10", 0));
+        this.mainActivity = mainActivity;
     }
 
     @NonNull
@@ -60,7 +63,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder{
         private ImageView songImageView;
         private TextView songNameView;
         private TextView songArtistAndAlbumView;
@@ -72,7 +75,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
             songNameView = (TextView) songView.findViewById(R.id.songName);
             songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
             songView.setOnClickListener(view -> {
-                //call method in main activity to play song here
+                mainActivity.playAudio(testDataSet.get(getAdapterPosition()).getId());
             });
         }
 
@@ -100,8 +103,4 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
             this.songArtistAndAlbumView = songArtistAndAlbumView;
         }
     }
-
-
-
-
 }
