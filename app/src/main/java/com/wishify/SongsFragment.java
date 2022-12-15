@@ -27,7 +27,7 @@ public class SongsFragment extends Fragment {
     {
         this.view = view;
         recView = view.findViewById(R.id.songs_rec_view);
-        SongsAdapter adapter = new SongsAdapter();
+        SongsAdapter adapter = new SongsAdapter(((MainActivity)getActivity()));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recView.setLayoutManager(layoutManager);
         recView.setItemAnimator(new DefaultItemAnimator());
