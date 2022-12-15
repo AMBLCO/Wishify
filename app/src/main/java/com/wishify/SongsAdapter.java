@@ -65,12 +65,15 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
         private TextView songNameView;
         private TextView songArtistAndAlbumView;
 
-        public ViewHolder(View view)
+        public ViewHolder(View songView)
         {
-            super(view);
-            songImageView = (ImageView) view.findViewById(R.id.songImage);
-            songNameView = (TextView) view.findViewById(R.id.songName);
-            songArtistAndAlbumView = (TextView) view.findViewById(R.id.songArtistAndAlbum);
+            super(songView);
+            songImageView = (ImageView) songView.findViewById(R.id.songImage);
+            songNameView = (TextView) songView.findViewById(R.id.songName);
+            songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
+            songView.setOnClickListener(view -> {
+                //call method in main activity to play song here
+            });
         }
 
         public ImageView getSongImageView() {

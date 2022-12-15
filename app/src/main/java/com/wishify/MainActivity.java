@@ -17,8 +17,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int READ_MEDIA_AUDIO_CODE = 10;
     private static final int READ_EXTERNAL_STORAGE_CODE = 11;
 
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private FrameLayout mBottomSheet;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,17 @@ public class MainActivity extends AppCompatActivity {
 
         // Get layout elements
         BottomNavigationView navigView = findViewById(R.id.bottom_navigation);
+
+        mBottomSheet = findViewById(R.id.bottom_sheet);
+        mBottomSheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //add popup menu with more options like seeking or skipping the track
+            }
+        });
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        mBottomSheetBehavior.setDraggable(false);
 
         // Variables
         FragmentManager fragMana = getSupportFragmentManager();
@@ -160,13 +178,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void playAudio(long id) {
+    public void playAudio(long id) {
         audioPlayerServiceIntent.putExtra("file", id);
         audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
         startService(audioPlayerServiceIntent);
+
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    private void stopAudio() {
+    public void stopAudio() {
         stopService(audioPlayerServiceIntent);
     }
 

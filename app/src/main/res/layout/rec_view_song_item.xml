@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="48dp">
 
     <ImageView
         android:id="@+id/songImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_songs" />
@@ -18,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
         android:text="Name of song"
         app:layout_constraintStart_toEndOf="@+id/songImage"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
         android:text="Artist - Album"
         app:layout_constraintStart_toEndOf="@+id/songImage"
         app:layout_constraintTop_toBottomOf="@+id/songName" />
