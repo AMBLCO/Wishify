@@ -9,6 +9,9 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
@@ -100,7 +103,16 @@ public class FileDiscoveryService extends Service {
 
                 // Stores column values and the contentUri in a local object
                 // that represents the media file.
-                songList.add(new Song(contentUri, title, artist, album, duration));
+                // get bitmap
+                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                mmr.setDataSource(appContext, contentUri);
+                byte[] data = mmr.getEmbeddedPicture();
+                Bitmap bitmap = BitmapFactory.decodeResource(appContext.getResources(), R.drawable.ic_songs);
+                if (data != null)
+                {
+                    bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                }
+                songList.add(new Song(contentUri, title, artist, album, duration, bitmap));
             }
         } catch (Exception e)
         {

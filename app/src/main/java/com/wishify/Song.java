@@ -1,24 +1,28 @@
 package com.wishify;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 
 public class Song {
-    private String title;
-    private String artist;
-    private String album;
-    private Image cover;
-    private int duration;
-    private Uri uri;
+    private final String title;
+    private final String artist;
+    private final String album;
+    private final Bitmap bitmap;
+    private final int duration;
+    private final Uri uri;
 
-    public Song(Uri uri, String title, String artist, String album, int duration)
+    public Song(Uri uri, String title, String artist, String album, int duration, Bitmap bitmap)
     {
         this.title = title;
         this.artist = artist;
         this.album = album;
         this.duration = duration;
         this.uri = uri;
+        this.bitmap = bitmap;
     }
 
     public String getTitle() {
@@ -33,10 +37,9 @@ public class Song {
         return album;
     }
 
-    public Image getCover() {
-        return cover;
-    }
+    public Bitmap getBitmap() { return this.bitmap; }
 
     public Uri getUri() { return this.uri; }
 
+    public int getDuration() {return this.duration; }
 }

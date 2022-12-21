@@ -3,6 +3,7 @@ package com.wishify;
 import static java.lang.String.valueOf;
 
 import android.media.Image;
+import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,10 +38,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Fetch from Audio File Discovery Service
 
-
-
-        // TEMP
-        holder.getSongImageView().setImageResource(R.drawable.ic_songs);
+        holder.getSongImageView().setImageBitmap(Globals.getSongsList().get(position).getBitmap());
         holder.getSongNameView().setText(Globals.getSongsList().get(position).getTitle());
 
         String artNalb = Globals.getSongsList().get(position).getArtist() + " - " + Globals.getSongsList().get(position).getAlbum();
