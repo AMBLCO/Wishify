@@ -12,7 +12,11 @@ public class AudioPlayer {
 
     private static MainActivity mainActivity = MainActivity.getInstance();
 
-    public static void playAudio(long id) {
-        mainActivity.playAudio(id);
+    public static void playAudio(Song song) {
+        mainActivity.playAudio(song);
+    }
+
+    public static void stopAudio() {
+        mainActivity.stopAudio();
     }
 }

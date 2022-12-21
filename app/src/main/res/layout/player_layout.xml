@@ -5,7 +5,7 @@
     android:layout_height="64dp">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/playerPlayPauseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -13,36 +13,36 @@
         android:contentDescription="play/pause"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_media_play" />
+        app:srcCompat="@android:drawable/ic_media_pause" />
 
     <ImageView
-        android:id="@+id/songImage2"
+        android:id="@+id/playerSongImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="12dp"
-        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintStart_toEndOf="@+id/playerPlayPauseButton"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_songs" />
 
     <TextView
-        android:id="@+id/songName2"
+        android:id="@+id/controlSongName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:text="Name of song"
-        app:layout_constraintStart_toEndOf="@+id/songImage2"
+        app:layout_constraintStart_toEndOf="@+id/playerSongImage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/songArtistAndAlbum2"
+        android:id="@+id/controlSongArtistAndAlbum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:text="Artist - Album"
-        app:layout_constraintStart_toEndOf="@+id/songImage2"
-        app:layout_constraintTop_toBottomOf="@+id/songName2" />
+        app:layout_constraintStart_toEndOf="@+id/playerSongImage"
+        app:layout_constraintTop_toBottomOf="@+id/controlSongName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

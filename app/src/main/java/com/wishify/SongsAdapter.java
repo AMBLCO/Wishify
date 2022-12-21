@@ -64,7 +64,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
             songNameView = (TextView) songView.findViewById(R.id.songName);
             songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
             songView.setOnClickListener(view -> {
-                mainActivity.playAudio(Globals.getSongsList().get(getAdapterPosition()).getUri());
+                mainActivity.playAudio(Globals.getSongsList().get(getAdapterPosition()));
             });
         }
 
