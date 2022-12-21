@@ -20,8 +20,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="/run/media/mizu/d8e5fab8-cdf4-48ed-90fb-5a3a43a3e676/AndroidStudioPROJECTS/Wishify" />
-            <option value="/run/media/mizu/d8e5fab8-cdf4-48ed-90fb-5a3a43a3e676/AndroidStudioPROJECTS/Wishify/app" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
       </GradleProjectSettings>

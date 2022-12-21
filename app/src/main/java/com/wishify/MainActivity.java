@@ -13,7 +13,6 @@ import androidx.work.WorkRequest;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,11 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private BottomSheetBehavior mBottomSheetBehavior;
     private FrameLayout mBottomSheet;
 
-    // Get instances of fragments
-    private ArtistsFragment artistsFragment;
-    private AlbumsFragment albumsFragment;
-    private SongsFragment songsFragment;
-    private PlaylistsFragment playlistsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,24 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
         weakReference = new WeakReference<>(MainActivity.this);
 
-        artistsFragment = new ArtistsFragment();
-        albumsFragment = new AlbumsFragment();
-        songsFragment = new SongsFragment();
-        playlistsFragment = new PlaylistsFragment();
-
         // Variables
         FragmentManager fragMana = getSupportFragmentManager();
-
-        fragMana.beginTransaction()
-                .add(R.id.mainFragmentContainerView, artistsFragment, "artists")
-                .add(R.id.mainFragmentContainerView, albumsFragment, "albums")
-                .add(R.id.mainFragmentContainerView, songsFragment, "songs")
-                .add(R.id.mainFragmentContainerView, playlistsFragment, "playlists")
-                .hide(artistsFragment)
-                .hide(albumsFragment)
-                .hide(playlistsFragment)
-                .show(songsFragment)
-                .commit();
 
         // On commence sur la page des chansons
         navigView.setSelectedItemId(R.id.songs);
@@ -96,13 +74,11 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.artists)
                 {
                     // On doit changer de Fragment si et seulement si le fragment visible n'est pas celui désiré
-                    if (artistsFragment.isHidden())
+                    if (!(fragMana.findFragmentById(R.id.mainFragmentContainerView) instanceof ArtistsFragment))
                     {
                         fragMana.beginTransaction()
-                                .show(artistsFragment)
-                                .hide(albumsFragment)
-                                .hide(playlistsFragment)
-                                .hide(songsFragment)
+                                .setReorderingAllowed(true)
+                                .replace(R.id.mainFragmentContainerView, ArtistsFragment.class, null)
                                 .commit();
 
                     }
@@ -111,13 +87,11 @@ public class MainActivity extends AppCompatActivity {
                 else if (item.getItemId() == R.id.albums)
                 {
                     // On doit changer de Fragment si et seulement si le fragment visible n'est pas celui désiré
-                    if (albumsFragment.isHidden())
+                    if (!(fragMana.findFragmentById(R.id.mainFragmentContainerView) instanceof AlbumsFragment))
                     {
                         fragMana.beginTransaction()
-                                .hide(artistsFragment)
-                                .show(albumsFragment)
-                                .hide(playlistsFragment)
-                                .hide(songsFragment)
+                                .setReorderingAllowed(true)
+                                .replace(R.id.mainFragmentContainerView, AlbumsFragment.class, null)
                                 .commit();
 
                     }
@@ -126,15 +100,12 @@ public class MainActivity extends AppCompatActivity {
                 else if (item.getItemId() == R.id.songs)
                 {
                     // On doit changer de Fragment si et seulement si le fragment visible n'est pas celui désiré
-                    if (songsFragment.isHidden())
+                    if (!(fragMana.findFragmentById(R.id.mainFragmentContainerView) instanceof SongsFragment))
                     {
                         fragMana.beginTransaction()
-                                .hide(artistsFragment)
-                                .hide(albumsFragment)
-                                .hide(playlistsFragment)
-                                .show(songsFragment)
+                                .setReorderingAllowed(true)
+                                .replace(R.id.mainFragmentContainerView, SongsFragment.class, null)
                                 .commit();
-
                         //SongsFragment songsFragment = ((SongsFragment) getSupportFragmentManager().findFragmentById(R.id.mainFragmentContainerView));
                         //if (songsFragment != null) {
                             //songsFragment.setmMainActivity(MainActivity.this);
@@ -145,13 +116,11 @@ public class MainActivity extends AppCompatActivity {
                 else if (item.getItemId() == R.id.playlists)
                 {
                     // On doit changer de Fragment si et seulement si le fragment visible n'est pas celui désiré
-                    if (playlistsFragment.isHidden())
+                    if (!(fragMana.findFragmentById(R.id.mainFragmentContainerView) instanceof PlaylistsFragment))
                     {
                         fragMana.beginTransaction()
-                                .hide(artistsFragment)
-                                .hide(albumsFragment)
-                                .show(playlistsFragment)
-                                .hide(songsFragment)
+                                .setReorderingAllowed(true)
+                                .replace(R.id.mainFragmentContainerView, PlaylistsFragment.class, null)
                                 .commit();
 
                     }
@@ -199,14 +168,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Manages FileDiscovery
+    // Manages FileDiscoveryWorker
     public void crawlAudioFiles()
     {
-        // Deploy FileDiscovery crawler
-        // Start service
-        Intent serviceIntent = new Intent(this, FileDiscoveryService.class);
-        ContextCompat.startForegroundService(this, serviceIntent);
-
+        // Deploy FileDiscoveryWorker crawler
     }
 
     @Override
@@ -229,17 +194,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void playAudio(Uri uri) {
-
-        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     public static MainActivity getInstance() {
         return weakReference.get();
     }
 
-    public void playAudio(long id) {
+    public void playAudio(Song song) {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        audioPlayerServiceIntent.putExtra("file", uri.toString());
+        audioPlayerServiceIntent.putExtra("file", song.getUri());
         audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
         startService(audioPlayerServiceIntent);
     }
