@@ -11,7 +11,6 @@ public class Song {
     private Image cover;
     private int duration;
     private Uri uri;
-    private long id; // DEPRECATED
 
     public Song(Uri uri, String title, String artist, String album, int duration)
     {
@@ -26,35 +25,18 @@ public class Song {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getArtist() {
         return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
     }
 
     public String getAlbum() {
         return album;
     }
 
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
     public Image getCover() {
         return cover;
     }
 
-    public void setCover(Image cover) {
-        this.cover = cover;
-    }
+    public Uri getUri() { return this.uri; }
 
-    public long getId() { return id; }
-
-    public void setId(long id) { this.id = id; }
 }

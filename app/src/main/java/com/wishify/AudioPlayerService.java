@@ -18,9 +18,10 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction().equals(ACTION_PLAY)) {
-            long id = intent.getExtras().getLong("file");
-            Uri contentUri = ContentUris.withAppendedId(
-                    android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
+            Uri uri = Uri.parse(intent.getExtras().getString("file"));
+
+            //Uri contentUri = ContentUris.withAppendedId(
+                    //android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, uri);
 
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioAttributes(
@@ -30,7 +31,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                             .build()
             );
             try {
-                mediaPlayer.setDataSource(getApplicationContext(), contentUri);
+                mediaPlayer.setDataSource(getApplicationContext(), uri);
             } catch (IOException e) {
                 e.printStackTrace();
             }

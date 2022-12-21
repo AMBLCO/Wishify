@@ -13,6 +13,7 @@ import androidx.work.WorkRequest;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -232,11 +233,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void playAudio(long id) {
+    public void playAudio(Uri uri) {
 
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        audioPlayerServiceIntent.putExtra("file", id);
+        audioPlayerServiceIntent.putExtra("file", uri.toString());
         audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
         startService(audioPlayerServiceIntent);
     }
