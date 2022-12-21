@@ -14,8 +14,6 @@ import java.util.ArrayList;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 {
-    // Public for now
-    public static final ArrayList<Song> songs = new ArrayList<>();
     private MainActivity mainActivity;
 
     public SongsAdapter(MainActivity mainActivity)
@@ -40,16 +38,16 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 
         // TEMP
         holder.getSongImageView().setImageResource(R.drawable.ic_songs);
-        holder.getSongNameView().setText(songs.get(position).getTitle());
+        holder.getSongNameView().setText(Globals.getSongsList().get(position).getTitle());
 
-        String artNalb = songs.get(position).getArtist() + " - " + songs.get(position).getAlbum();
+        String artNalb = Globals.getSongsList().get(position).getArtist() + " - " + Globals.getSongsList().get(position).getAlbum();
 
         holder.getSongArtistAndAlbumView().setText(artNalb);
     }
 
     @Override
     public int getItemCount() {
-        return songs.size();
+        return Globals.getSongsList().size();
     }
 
 
@@ -65,7 +63,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
             songNameView = (TextView) songView.findViewById(R.id.songName);
             songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
             songView.setOnClickListener(view -> {
-                mainActivity.playAudio(songs.get(getAdapterPosition()).getId());
+                mainActivity.playAudio(Globals.getSongsList().get(getAdapterPosition()).getId());
             });
         }
 

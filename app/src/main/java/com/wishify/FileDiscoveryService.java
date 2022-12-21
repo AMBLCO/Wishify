@@ -24,6 +24,7 @@ import org.reactivestreams.Subscription;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.MaybeObserver;
@@ -113,33 +114,38 @@ public class FileDiscoveryService extends Service {
     {
         Maybe<List<Song>> maybe = createMaybe(appContext);
 
-        maybe.subscribeOn(Schedulers.io())
+        maybe.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(new MaybeObserver<List<Song>>()
             {
                 @Override
-                public void onSubscribe(@NonNull Disposable d) {
+                public void onSubscribe(@NonNull Disposable d)
+                {
                 }
 
                 @Override
-                public void onSuccess(@NonNull List<Song> songs) {
+                public void onSuccess(@NonNull List<Song> songs)
+                {
                     // Send result to main SongList
                     Log.d("FILE_DISCOVERY", "onSuccess() called with size " + songs.size());
-
+                    Globals.addToSongsList(songs);
                     stopSelf(); // Stop service
                 }
 
                 @Override
-                public void onError(@NonNull Throwable e) {
+                public void onError(@NonNull Throwable e)
+                {
                     Log.e("FILE_DISCOVERY", "onError() called");
                     stopSelf(); // Stop service
                 }
 
                 @Override
-                public void onComplete() {
+                public void onComplete()
+                {
                     Log.d("FILE_DISCOVERY", "onComplete() called");
                     stopSelf(); // Stop service
                 }
             });
+
     }
 
     public FileDiscoveryService()
