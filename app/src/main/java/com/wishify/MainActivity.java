@@ -25,9 +25,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.lang.ref.WeakReference;
+
 public class MainActivity extends AppCompatActivity {
 
     Intent audioPlayerServiceIntent;
+    public static WeakReference<MainActivity> weakReference;
 
     // Arbitrary Constants
     private static final int READ_MEDIA_AUDIO_CODE = 10;
@@ -55,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setDraggable(false);
+
+        weakReference = new WeakReference<>(MainActivity.this);
 
         // Variables
         FragmentManager fragMana = getSupportFragmentManager();
@@ -189,9 +194,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void playAudio(long id) {
+    public static MainActivity getInstance() {
+        return weakReference.get();
+    }
 
-        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    public void playAudio(long id) {
+        if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         audioPlayerServiceIntent.putExtra("file", id);
         audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");

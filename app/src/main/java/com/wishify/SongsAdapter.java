@@ -1,11 +1,14 @@
 package com.wishify;
 
+import static java.lang.String.valueOf;
+
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,10 +18,8 @@ import java.util.ArrayList;
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 {
     private final ArrayList<Song> testDataSet = new ArrayList<>();
-    private MainActivity mainActivity;
 
-
-    public SongsAdapter(MainActivity mainActivity)
+    public SongsAdapter()
     {
         testDataSet.add(new Song("Name1", "Artist1", "Album1", 0));
         testDataSet.add(new Song("Name2", "Artist2", "Album2", 0));
@@ -30,7 +31,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
         testDataSet.add(new Song("Name8", "Artist8", "Album8", 0));
         testDataSet.add(new Song("Name9", "Artist9", "Album9", 0));
         testDataSet.add(new Song("Name10", "Artist10", "Album10", 0));
-        this.mainActivity = mainActivity;
     }
 
     @NonNull
@@ -75,7 +75,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
             songNameView = (TextView) songView.findViewById(R.id.songName);
             songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
             songView.setOnClickListener(view -> {
-                mainActivity.playAudio(testDataSet.get(getAdapterPosition()).getId());
+                AudioPlayer.playAudio(testDataSet.get(getAdapterPosition()).getId());
             });
         }
 
