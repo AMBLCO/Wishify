@@ -26,20 +26,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.io.File;
-
-import kotlinx.coroutines.GlobalScope;
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Keep available reference to this object
-
-
-
     Intent audioPlayerServiceIntent;
+    public static WeakReference<MainActivity> weakReference;
 
     // Arbitrary Constants
-    //private static final int READ_MEDIA_AUDIO_CODE = 10;
+    private static final int READ_MEDIA_AUDIO_CODE = 10;
     private static final int READ_EXTERNAL_STORAGE_CODE = 11;
 
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -70,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setDraggable(false);
 
+        weakReference = new WeakReference<>(MainActivity.this);
+
         artistsFragment = new ArtistsFragment();
         albumsFragment = new AlbumsFragment();
         songsFragment = new SongsFragment();
@@ -91,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
         // On commence sur la page des chansons
         navigView.setSelectedItemId(R.id.songs);
-
 
         navigView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener(){
 
@@ -236,6 +232,12 @@ public class MainActivity extends AppCompatActivity {
     public void playAudio(Uri uri) {
 
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    public static MainActivity getInstance() {
+        return weakReference.get();
+    }
+
+    public void playAudio(long id) {
+        if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         audioPlayerServiceIntent.putExtra("file", uri.toString());
         audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
