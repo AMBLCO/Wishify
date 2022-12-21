@@ -14,22 +14,12 @@ import java.util.ArrayList;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 {
-    private final ArrayList<Song> testDataSet = new ArrayList<>();
+    // Public for now
+    public static final ArrayList<Song> songs = new ArrayList<>();
     private MainActivity mainActivity;
-
 
     public SongsAdapter(MainActivity mainActivity)
     {
-        testDataSet.add(new Song("Name1", "Artist1", "Album1", 0));
-        testDataSet.add(new Song("Name2", "Artist2", "Album2", 0));
-        testDataSet.add(new Song("Name3", "Artist3", "Album3", 0));
-        testDataSet.add(new Song("Name4", "Artist4", "Album4", 0));
-        testDataSet.add(new Song("Name5", "Artist5", "Album5", 0));
-        testDataSet.add(new Song("Name6", "Artist6", "Album6", 0));
-        testDataSet.add(new Song("Name7", "Artist7", "Album7", 0));
-        testDataSet.add(new Song("Name8", "Artist8", "Album8", 0));
-        testDataSet.add(new Song("Name9", "Artist9", "Album9", 0));
-        testDataSet.add(new Song("Name10", "Artist10", "Album10", 0));
         this.mainActivity = mainActivity;
     }
 
@@ -50,16 +40,16 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 
         // TEMP
         holder.getSongImageView().setImageResource(R.drawable.ic_songs);
-        holder.getSongNameView().setText(testDataSet.get(position).getTitle());
+        holder.getSongNameView().setText(songs.get(position).getTitle());
 
-        String artNalb = testDataSet.get(position).getArtist() + " - " + testDataSet.get(position).getAlbum();
+        String artNalb = songs.get(position).getArtist() + " - " + songs.get(position).getAlbum();
 
         holder.getSongArtistAndAlbumView().setText(artNalb);
     }
 
     @Override
     public int getItemCount() {
-        return testDataSet.size();
+        return songs.size();
     }
 
 
@@ -75,7 +65,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
             songNameView = (TextView) songView.findViewById(R.id.songName);
             songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
             songView.setOnClickListener(view -> {
-                mainActivity.playAudio(testDataSet.get(getAdapterPosition()).getId());
+                mainActivity.playAudio(songs.get(getAdapterPosition()).getId());
             });
         }
 

@@ -25,12 +25,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.io.File;
+
+import kotlinx.coroutines.GlobalScope;
+
 public class MainActivity extends AppCompatActivity {
 
     Intent audioPlayerServiceIntent;
 
     // Arbitrary Constants
-    private static final int READ_MEDIA_AUDIO_CODE = 10;
+    //private static final int READ_MEDIA_AUDIO_CODE = 10;
     private static final int READ_EXTERNAL_STORAGE_CODE = 11;
 
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -163,10 +167,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Manages FileDiscoveryWorker
+    // Manages FileDiscovery
     public void crawlAudioFiles()
     {
-        // Deploy FileDiscoveryWorker crawler
+        // Deploy FileDiscovery crawler
+        // Start service
+        Intent serviceIntent = new Intent(this, FileDiscoveryService.class);
+        ContextCompat.startForegroundService(this, serviceIntent);
+
     }
 
     @Override

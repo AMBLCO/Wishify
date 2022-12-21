@@ -2,21 +2,24 @@ package com.wishify;
 
 
 import android.media.Image;
+import android.net.Uri;
 
 public class Song {
     private String title;
     private String artist;
     private String album;
     private Image cover;
-    private int timeLength;
-    private long id;
+    private int duration;
+    private Uri uri;
+    private long id; // DEPRECATED
 
-    public Song(String title, String artist, String album, long id)
+    public Song(Uri uri, String title, String artist, String album, int duration)
     {
         this.title = title;
         this.artist = artist;
         this.album = album;
-        this.id = id;
+        this.duration = duration;
+        this.uri = uri;
     }
 
     public String getTitle() {
