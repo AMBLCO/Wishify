@@ -20,4 +20,8 @@ public class Globals
     {
         return songsList;
     }
+
+    public static void setSongsList(List<Song> songsList) {
+        Globals.songsList = songsList;
+    }
 }
