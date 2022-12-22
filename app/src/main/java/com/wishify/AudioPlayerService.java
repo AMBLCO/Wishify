@@ -22,12 +22,14 @@ import java.io.IOException;
 import java.net.URI;
 
 public class AudioPlayerService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
-    private static final String ACTION_PLAY = "com.wishify.action.PLAY";
     private static MediaPlayer mediaPlayer = new MediaPlayer(); // We want only one MediaPlayer running at a given time.
     private static int mediaPlayerStatus = 0; // Start in STATE_IDLE
 
 
     // Arbitrary constants
+    private static final String ACTION_PLAY = "com.wishify.action.PLAY"; // When unpausing
+    private static final String ACTION_FORCE_PLAY = "com.wishify.action.FORCE_PLAY"; // When replacing currently running song with another
+
     private static final int STATE_IDLE = 0; // When constructor is done
     private static final int STATE_PREPARED = 1;
     private static final int STATE_STARTED = 2;
@@ -55,8 +57,16 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
 
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (intent.getAction().equals(ACTION_PLAY))
+        if (intent.getAction().equals(ACTION_FORCE_PLAY))
         {
+            // If a song is currently playing, stop it
+            if (mediaPlayerStatus == STATE_STARTED)
+            {
+                mediaPlayer.reset();
+                mediaPlayerStatus = STATE_IDLE;
+            }
+
+
             Uri uri = Uri.parse(intent.getExtras().getString("file"));
             if (mediaPlayerStatus == STATE_IDLE) {
 
