@@ -25,10 +25,13 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
     private static MediaPlayer mediaPlayer = new MediaPlayer(); // We want only one MediaPlayer running at a given time.
     private static int mediaPlayerStatus = 0; // Start in STATE_IDLE
 
+    private int resumePosition;
 
     // Arbitrary constants
     private static final String ACTION_PLAY = "com.wishify.action.PLAY"; // When unpausing
     private static final String ACTION_FORCE_PLAY = "com.wishify.action.FORCE_PLAY"; // When replacing currently running song with another
+    private static final String ACTION_PAUSE = "com.wishify.action.PAUSE";
+    private static final String ACTION_RESUME = "com.wishify.action.RESUME";
 
     private static final int STATE_IDLE = 0; // When constructor is done
     private static final int STATE_PREPARED = 1;
@@ -98,6 +101,10 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             }
         }
 
+        if (intent.getAction().equals(ACTION_PAUSE) && mediaPlayerStatus != STATE_PAUSED) pauseMedia();
+
+        if (intent.getAction().equals(ACTION_RESUME) && mediaPlayerStatus != STATE_STARTED) resumeMedia();
+
         return START_REDELIVER_INTENT;
     }
 
@@ -149,6 +156,10 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
 
     }
 
+    public static int getMediaPlayerStatus() {
+        return mediaPlayerStatus;
+    }
+
 
     // TODO MAYBE DELETE THIS?
     public class LocalBinder extends Binder {
@@ -157,7 +168,21 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    private void pauseMedia() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            resumePosition = mediaPlayer.getCurrentPosition();
+            mediaPlayerStatus = STATE_PAUSED;
+        }
+    }
 
+    private void resumeMedia() {
+        if (!mediaPlayer.isPlaying()) {
+            mediaPlayer.seekTo(resumePosition);
+            mediaPlayer.start();
+            mediaPlayerStatus = STATE_STARTED;
+        }
+    }
 
 }
 

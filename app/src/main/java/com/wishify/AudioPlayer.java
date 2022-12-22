@@ -4,10 +4,6 @@ import static android.app.PendingIntent.getActivity;
 
 import static java.lang.String.valueOf;
 
-import android.widget.Toast;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
 public class AudioPlayer {
 
     private static MainActivity mainActivity = MainActivity.getInstance();
@@ -17,6 +13,6 @@ public class AudioPlayer {
     }
 
     public static void stopAudio() {
-        mainActivity.stopAudio();
+        mainActivity.pauseAudio();
     }
 }
