@@ -94,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 if (getMediaPlayerStatus() != 3) pauseAudio();
 
                 if (getMediaPlayerStatus() == 3) resumeAudio();
-
-                Toast.makeText(getApplicationContext(), String.valueOf(getMediaPlayerStatus()), Toast.LENGTH_SHORT).show();
             }
         });
         musicImage = findViewById(R.id.playerSongImage);

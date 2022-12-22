@@ -63,7 +63,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         if (intent.getAction().equals(ACTION_FORCE_PLAY))
         {
             // If a song is currently playing, stop it
-            if (mediaPlayerStatus == STATE_STARTED)
+            if (mediaPlayerStatus == STATE_STARTED || mediaPlayerStatus == STATE_PAUSED)
             {
                 mediaPlayer.reset();
                 mediaPlayerStatus = STATE_IDLE;
@@ -160,8 +160,6 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         return mediaPlayerStatus;
     }
 
-
-    // TODO MAYBE DELETE THIS?
     public class LocalBinder extends Binder {
         public AudioPlayerService getService() {
             return AudioPlayerService.this;
