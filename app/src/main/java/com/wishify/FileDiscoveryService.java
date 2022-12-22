@@ -193,7 +193,7 @@ public class FileDiscoveryService extends Service {
         //contentResolver = appContext.getContentResolver();
         //mime = MimeTypeMap.getSingleton();
 
-        List<Uri> uriList = new ArrayList<>();
+        //List<Uri> uriList = new ArrayList<>();
         List<Song> songList = new ArrayList<>();
 
         File filePath = Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC);
@@ -209,7 +209,7 @@ public class FileDiscoveryService extends Service {
 
 
         // parse all uris MergeCursor
-        Log.d("FILES", "Acquired all songs Uri : " + uriList.size());
+        //Log.d("FILES", "Acquired all songs Uri : " + uriList.size());
 
 
 
@@ -236,7 +236,7 @@ public class FileDiscoveryService extends Service {
                 {
                     // Send result to main SongList
                     Log.d("FILE_DISCOVERY", "onSuccess() called with size " + songs.size());
-                    Globals.addToSongsList(songs);
+                    Globals.setSongsList(songs);
                     stopSelf(); // Stop service
                 }
 

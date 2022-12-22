@@ -12,7 +12,7 @@ public class Song {
     private final String artist;
     private final String album;
     private final Bitmap bitmap;
-    private final int duration;
+    private final int duration; // In seconds
     private final Uri uri;
 
     public Song(Uri uri, String title, String artist, String album, int duration, Bitmap bitmap)
