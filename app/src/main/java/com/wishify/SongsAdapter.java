@@ -21,14 +21,10 @@ import java.util.List;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> implements Filterable
 {
-    private MainActivity mainActivity;
     private List<Song> songList = Globals.getSongsList();
     private List<Song> songListFilter = Globals.getSongsList();
 
-    public SongsAdapter(MainActivity mainActivity)
-    {
-        this.mainActivity = mainActivity;
-    }
+    public SongsAdapter() {}
 
     @NonNull
     @Override
@@ -93,7 +89,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         private ImageView songImageView;
         private TextView songNameView;
         private TextView songArtistAndAlbumView;
@@ -105,7 +101,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             songNameView = (TextView) songView.findViewById(R.id.songName);
             songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
             songView.setOnClickListener(view -> {
-                mainActivity.playAudio(Globals.getSongsList().get(getAdapterPosition()));
+                AudioPlayer.playAudio(Globals.getSongsList().get(getAdapterPosition()));
             });
         }
 
