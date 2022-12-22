@@ -44,10 +44,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class FileDiscoveryService extends Service {
     public static final String CHANNEL_ID = "FileDiscoveryService";
     public static final int FILEDISCOVERY_NOTIFICATION_ID = 10;
-    private static ContentResolver contentResolver; // To be init
-    private static MimeTypeMap mime; // To be init
+    //private static ContentResolver contentResolver; // To be init
+    //private static MimeTypeMap mime; // To be init
     private static final MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 
+    /*
     // Main work function called by work()
     private static List<Song> findAudioFiles(Context appContext)
     {
@@ -130,6 +131,7 @@ public class FileDiscoveryService extends Service {
 
         return songList;
     }
+    */
 
     // God help us
     private static void findAudioRecursive(Context appContext, File filePath, List<Song> songList)
@@ -188,8 +190,8 @@ public class FileDiscoveryService extends Service {
 
     private static List<Song> findAudioFilesFromNavig(Context appContext)
     {
-        contentResolver = appContext.getContentResolver();
-        mime = MimeTypeMap.getSingleton();
+        //contentResolver = appContext.getContentResolver();
+        //mime = MimeTypeMap.getSingleton();
 
         List<Uri> uriList = new ArrayList<>();
         List<Song> songList = new ArrayList<>();
