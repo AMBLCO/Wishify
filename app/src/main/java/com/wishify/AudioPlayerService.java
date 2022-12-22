@@ -38,7 +38,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
     private static final int STATE_STOPPED = 5;
     private static final int STATE_ERROR = 6;
     private static final int STATE_END = 7; // When released
-    private static final int STATE_INITIALIZED = 8; // When released
+    private static final int STATE_INITIALIZED = 8;
 
     // This is a callback
     private static final MediaPlayer.OnCompletionListener mediaPlayerOnCompletionListener = new MediaPlayer.OnCompletionListener()
