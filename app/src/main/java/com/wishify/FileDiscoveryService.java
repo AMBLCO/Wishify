@@ -44,96 +44,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class FileDiscoveryService extends Service {
     public static final String CHANNEL_ID = "FileDiscoveryService";
     public static final int FILEDISCOVERY_NOTIFICATION_ID = 10;
-    //private static ContentResolver contentResolver; // To be init
-    //private static MimeTypeMap mime; // To be init
     private static final MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 
-    /*
-    // Main work function called by work()
-    private static List<Song> findAudioFiles(Context appContext)
-    {
-        List<Song> songList = new ArrayList<>();
 
-        Uri collection;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
-        } else {
-            collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        }
-
-        Log.d("FILE_DISCOVERY", "collection uri is: " + collection.toString());
-        // content://media/external/audio/media
-
-        String[] projection = new String[] {
-                //MediaStore.Audio.Media.IS_MUSIC,
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.SIZE
-        };
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"; // WHERE IS_MUSIC != 0 -> IT IS A MUSIC FILE
-        String[] selectionArgs = new String[]
-                {
-                //String.valueOf(TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES));
-                };
-
-        String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
-
-        try (Cursor cursor = appContext.getContentResolver().query(
-                collection,
-                projection,
-                selection,
-                null,
-                sortOrder
-        )) {
-            // Cache column indices.
-            int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
-            int titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE);
-            int artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
-            int albumColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM);
-            int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
-            //int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
-
-            //cursor.moveToFirst();
-
-            while (cursor.moveToNext()) {
-                // Get values of columns for a given song.
-                long id = cursor.getLong(idColumn);
-                String title = cursor.getString(titleColumn);
-                String artist = cursor.getString(artistColumn);
-                String album = cursor.getString(albumColumn);
-                int duration = cursor.getInt(durationColumn);
-                //int size = cursor.getInt(sizeColumn);
-
-                Uri contentUri = ContentUris.withAppendedId(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
-
-                // Stores column values and the contentUri in a local object
-                // that represents the media file.
-                // get bitmap
-                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-                mmr.setDataSource(appContext, contentUri);
-                byte[] data = mmr.getEmbeddedPicture();
-                Bitmap bitmap = BitmapFactory.decodeResource(appContext.getResources(), R.drawable.ic_songs);
-                if (data != null)
-                {
-                    bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                }
-                songList.add(new Song(contentUri, title, artist, album, duration, bitmap));
-            }
-        } catch (Exception e)
-        {
-            Log.e("FILE_DISCOVERY", "EXCEPTION IN try(cursor)");
-        }
-
-        return songList;
-    }
-    */
-
-    // God help us
+    // Recursive find audio files
     private static void findAudioRecursive(Context appContext, File filePath, List<Song> songList)
     {
         Log.d("FILES", "songList is of size " + songList.size());
@@ -187,13 +101,9 @@ public class FileDiscoveryService extends Service {
         }
     }
 
-
+    // Recursive search initiator
     private static List<Song> findAudioFilesFromNavig(Context appContext)
     {
-        //contentResolver = appContext.getContentResolver();
-        //mime = MimeTypeMap.getSingleton();
-
-        //List<Uri> uriList = new ArrayList<>();
         List<Song> songList = new ArrayList<>();
 
         File filePath = Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC);
@@ -206,13 +116,6 @@ public class FileDiscoveryService extends Service {
         else {
             Log.e("FILES", "files is nullptr");
         }
-
-
-        // parse all uris MergeCursor
-        //Log.d("FILES", "Acquired all songs Uri : " + uriList.size());
-
-
-
 
         return songList;
     }
@@ -254,11 +157,6 @@ public class FileDiscoveryService extends Service {
                     stopSelf(); // Stop service
                 }
             });
-
-    }
-
-    public FileDiscoveryService()
-    {
 
     }
 

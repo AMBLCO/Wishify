@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -22,29 +23,69 @@ import java.net.URI;
 
 public class AudioPlayerService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private static final String ACTION_PLAY = "com.wishify.action.PLAY";
-    MediaPlayer mediaPlayer = null;
-    boolean isPlaying = false;
+    private static MediaPlayer mediaPlayer = new MediaPlayer(); // We want only one MediaPlayer running at a given time.
+    private static int mediaPlayerStatus = 0; // Start in STATE_IDLE
+
+
+    // Arbitrary constants
+    private static final int STATE_IDLE = 0; // When constructor is done
+    private static final int STATE_PREPARED = 1;
+    private static final int STATE_STARTED = 2;
+    private static final int STATE_PAUSED = 3;
+    private static final int STATE_PLAYBACK_COMPLETED = 4;
+    private static final int STATE_STOPPED = 5;
+    private static final int STATE_ERROR = 6;
+    private static final int STATE_END = 7; // When released
+    private static final int STATE_INITIALIZED = 8; // When released
+
+    // This is a callback
+    private static final MediaPlayer.OnCompletionListener mediaPlayerOnCompletionListener = new MediaPlayer.OnCompletionListener()
+    {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            // Actions to be done when song is finished playing
+            Log.d("AUDIO_PLAYER", "Done playing song");
+            mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
+
+            mediaPlayer.reset();
+            mediaPlayerStatus = STATE_IDLE;
+        }
+    };
+
 
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (intent.getAction().equals(ACTION_PLAY)) {
+        if (intent.getAction().equals(ACTION_PLAY))
+        {
             Uri uri = Uri.parse(intent.getExtras().getString("file"));
+            if (mediaPlayerStatus == STATE_IDLE) {
 
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioAttributes(
-                    new AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .build()
-            );
-            try {
-                mediaPlayer.setDataSource(getApplicationContext(), uri);
-            } catch (IOException e) {
-                e.printStackTrace();
+                mediaPlayer.setAudioAttributes(
+                        new AudioAttributes.Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .setUsage(AudioAttributes.USAGE_MEDIA)
+                                .build()
+                );
+
+                mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+
+                // Assign callbacks
+                mediaPlayer.setOnCompletionListener(mediaPlayerOnCompletionListener);
+                mediaPlayer.setOnErrorListener(this); // Set the error listener to this
+                mediaPlayer.setOnPreparedListener(this);
             }
-            mediaPlayer.setOnErrorListener(this); // Set the error listener to this
-            mediaPlayer.setOnPreparedListener(this);
-            mediaPlayer.prepareAsync(); // prepare async to not block main thread
+
+            if (mediaPlayerStatus == STATE_IDLE) {
+                try {
+                    mediaPlayer.setDataSource(getApplicationContext(), uri);
+                    mediaPlayerStatus = STATE_INITIALIZED;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    mediaPlayerStatus = STATE_ERROR;
+                }
+
+                mediaPlayer.prepareAsync(); // prepare async to not block main thread
+            }
         }
 
         return START_REDELIVER_INTENT;
@@ -60,29 +101,54 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
 
     /** Called when MediaPlayer is ready */
     public void onPrepared(MediaPlayer player) {
-        player.start();
+        mediaPlayerStatus = STATE_PREPARED;
+        try {
+            player.start();
+            mediaPlayerStatus = STATE_STARTED;
+        } catch(Exception e)
+        {
+            mediaPlayerStatus = STATE_ERROR;
+        }
     }
+
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.e("AUDIO_PLAYER", "Audio player error");
-
+        mediaPlayerStatus = STATE_ERROR;
         mediaPlayer.release();
         mediaPlayer = null;
+        try {
+            mediaPlayer = new MediaPlayer(); // Recreate MediaPlayer
+            mediaPlayerStatus = STATE_IDLE;
+        } catch(Exception e)
+        {
+
+        }
         return true;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mediaPlayer != null) mediaPlayer.release();
+        // We should probably not release MediaPlayer because it is frequently used
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayerStatus = STATE_END;
+        }
+
     }
 
+
+    // TODO MAYBE DELETE THIS?
     public class LocalBinder extends Binder {
         public AudioPlayerService getService() {
             return AudioPlayerService.this;
         }
     }
+
+
+
 }
 
 //public class AudioPlayerService extends Service implements MediaPlayer.OnCompletionListener,

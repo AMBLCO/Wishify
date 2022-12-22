@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
         // WorkManager
         // Request permission and crawl
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) // 33
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) // SDK 33
         {
             checkPerm(Manifest.permission.READ_MEDIA_AUDIO, READ_MEDIA_AUDIO_CODE);
         }
