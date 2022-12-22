@@ -7,6 +7,8 @@ import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,10 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
+public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> implements Filterable
 {
     private MainActivity mainActivity;
+    private List<Song> songListFilter = Globals.getSongsList();
 
     public SongsAdapter(MainActivity mainActivity)
     {
@@ -49,6 +53,41 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
     @Override
     public int getItemCount() {
         return Globals.getSongsList().size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                FilterResults filterResults = new FilterResults();
+                if (charSequence == null || charSequence.length() == 0) {
+                    filterResults.values = songListFilter;
+                    filterResults.count = songListFilter.size();
+                }
+                else {
+                    String searchStr = charSequence.toString().toLowerCase();
+                    List<Song> songs = new ArrayList<>();
+                    for (Song song : songListFilter){
+                        if(song.getTitle().toLowerCase().contains(searchStr))
+                        {
+                            songs.add(song);
+                        }
+                    }
+
+                    filterResults.values = songs;
+                    filterResults.count = songs.size();
+                }
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                Globals.setSongsList((List<Song>) filterResults.values);
+            }
+        };
+        return filter;
     }
 
 

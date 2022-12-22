@@ -2,6 +2,7 @@ package com.wishify;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomSheetBehavior mBottomSheetBehavior;
     private FrameLayout mBottomSheet;
+    private FragmentManager fragMana;
 
 
     // Get instances of fragments
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Get layout elements
         BottomNavigationView navigView = findViewById(R.id.bottom_navigation);
+        fragMana = getSupportFragmentManager();
 
         mBottomSheet = findViewById(R.id.bottom_sheet);
         mBottomSheet.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         playlistsFragment = new PlaylistsFragment();
 
         // Variables
-        FragmentManager fragMana = getSupportFragmentManager();
+
 
         fragMana.beginTransaction()
                 .add(R.id.mainFragmentContainerView, artistsFragment, "artists")
@@ -181,6 +184,23 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_top, menu);
+        MenuItem searchBar = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView) searchBar.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!songsFragment.isHidden()) {
+                    songsFragment.adapter.getFilter().filter(newText);
+                }
+                return false;
+            }
+        });
         return true;
     }
 
@@ -189,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.app_bar_settings){
             startActivity(new Intent(this, SettingsActivity.class));
         }
+
         return super.onOptionsItemSelected(item);
     }
 

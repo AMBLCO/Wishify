@@ -25,6 +25,7 @@ public class SongsFragment extends Fragment {
         super(R.layout.fragment_songs);
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
