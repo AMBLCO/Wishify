@@ -4,12 +4,15 @@ import static java.lang.String.valueOf;
 
 import android.media.Image;
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,12 +110,21 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                 AudioPlayer.playAudio(Globals.getSongsList().get(getAdapterPosition()));
             });
 
-            songView.setOnLongClickListener(view -> {
-                Toast.makeText(songView.getContext(), "LONG CLICK", Toast.LENGTH_SHORT).show();
-                return true; // True indicates that we do not want to also call regular click listener
+            songView.setOnLongClickListener(view ->
+            {
+                Log.d("LONG_CLICK", "Registered long click"); // Works
+                PopupMenu popupMenu = new PopupMenu(view.getContext(), view, Gravity.END);
+                popupMenu.getMenuInflater().inflate(R.menu.songs_context_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener( item -> {
+                    Toast.makeText(view.getContext(), "Clicked popup", Toast.LENGTH_SHORT).show();
+                    return false;
+                });
+                popupMenu.show();
+                return true;
             });
-
         }
+
+
 
         public ImageView getSongImageView() {
             return songImageView;

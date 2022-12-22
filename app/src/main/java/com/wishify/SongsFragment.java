@@ -2,8 +2,15 @@ package com.wishify;
 
 import static android.graphics.drawable.ClipDrawable.HORIZONTAL;
 
+import android.app.Activity;
+import android.content.ClipData;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -38,5 +45,8 @@ public class SongsFragment extends Fragment {
         recView.setAdapter(adapter);
         DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), HORIZONTAL);
         recView.addItemDecoration(decoration);
+
+        registerForContextMenu(recView);
+
     }
 }
