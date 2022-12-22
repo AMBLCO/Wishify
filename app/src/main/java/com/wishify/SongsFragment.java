@@ -31,7 +31,7 @@ public class SongsFragment extends Fragment {
     {
         this.view = view;
         recView = view.findViewById(R.id.songs_rec_view);
-        adapter = new SongsAdapter(((MainActivity)getActivity()));
+        adapter = new SongsAdapter();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recView.setLayoutManager(layoutManager);
         recView.setItemAnimator(new DefaultItemAnimator());

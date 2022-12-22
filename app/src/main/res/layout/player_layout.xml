@@ -9,11 +9,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         android:contentDescription="play/pause"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_media_pause" />
+        app:srcCompat="@drawable/ic_pause" />
 
     <ImageView
         android:id="@+id/playerSongImage"
@@ -26,7 +26,7 @@
         app:srcCompat="@drawable/ic_songs" />
 
     <TextView
-        android:id="@+id/controlSongName"
+        android:id="@+id/playerSongName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -36,13 +36,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/controlSongArtistAndAlbum"
+        android:id="@+id/playerSongArtistAndAlbum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:text="Artist - Album"
         app:layout_constraintStart_toEndOf="@+id/playerSongImage"
-        app:layout_constraintTop_toBottomOf="@+id/controlSongName" />
+        app:layout_constraintTop_toBottomOf="@+id/playerSongName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

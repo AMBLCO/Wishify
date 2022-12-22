@@ -31,9 +31,9 @@ public class MusicControl {
         //Set the location of the window on the screen
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
-        ImageButton previousTrack = popupView.findViewById(R.id.previousTrackButton);
+        ImageButton previousTrack = popupView.findViewById(R.id.controlPreviousTrackButton);
         ImageButton playpause = popupView.findViewById(R.id.controlPlayPauseButton);
-        ImageButton nextTrack = popupView.findViewById(R.id.nextTrackButton);
+        ImageButton nextTrack = popupView.findViewById(R.id.controlNextTrackButton);
 
         previousTrack.setOnClickListener(new View.OnClickListener() {
             @Override
