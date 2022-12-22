@@ -172,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
     public void crawlAudioFiles()
     {
         // Deploy FileDiscoveryWorker crawler
+        Intent serviceIntent = new Intent(this, FileDiscoveryService.class);
+        ContextCompat.startForegroundService(this, serviceIntent);
     }
 
     @Override
