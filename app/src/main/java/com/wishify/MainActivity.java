@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
     public void playAudio(Song song) {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        audioPlayerServiceIntent.putExtra("file", song.getUri());
+        audioPlayerServiceIntent.putExtra("file", song.getUri().toString());
         audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
         startService(audioPlayerServiceIntent);
     }
