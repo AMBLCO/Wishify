@@ -1,21 +1,24 @@
 package com.wishify;
 
+import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkRequest;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +26,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -42,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
     private BottomSheetBehavior mBottomSheetBehavior;
     private FrameLayout mBottomSheet;
     private FragmentManager fragMana;
+
+    private ImageButton playpause;
+    private ImageView musicImage;
+    private TextView songName;
+    private TextView songArtistAndAlbum;
+
+    private AudioPlayerService player;
+    boolean serviceBound = false;
 
 
     // Get instances of fragments
@@ -63,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
         mBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //add popup menu with more options like seeking or skipping the track
+                MusicControl popUpClass = new MusicControl();
+                popUpClass.showPopupWindow(view);
             }
         });
 
@@ -71,6 +86,21 @@ public class MainActivity extends AppCompatActivity {
         mBottomSheetBehavior.setDraggable(false);
 
         weakReference = new WeakReference<>(MainActivity.this);
+
+        playpause = findViewById(R.id.playerPlayPauseButton);
+        playpause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getMediaPlayerStatus() != 3) pauseAudio();
+
+                if (getMediaPlayerStatus() == 3) resumeAudio();
+
+                Toast.makeText(getApplicationContext(), String.valueOf(getMediaPlayerStatus()), Toast.LENGTH_SHORT).show();
+            }
+        });
+        musicImage = findViewById(R.id.playerSongImage);
+        songName = findViewById(R.id.playerSongName);
+        songArtistAndAlbum = findViewById(R.id.playerSongArtistAndAlbum);
 
         artistsFragment = new ArtistsFragment();
         albumsFragment = new AlbumsFragment();
@@ -286,19 +316,72 @@ public class MainActivity extends AppCompatActivity {
         return weakReference.get();
     }
 
+    //Binding this Client to the AudioPlayer Service
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            AudioPlayerService.LocalBinder binder = (AudioPlayerService.LocalBinder) service;
+            player = binder.getService();
+            serviceBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBound = false;
+        }
+    };
+
     public void playAudio(Song song) {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+        playpause.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_pause));
+        musicImage.setImageBitmap(song.getBitmap());
+        songName.setText(song.getTitle());
+        songArtistAndAlbum.setText(song.getArtist() + " - " + song.getAlbum());
 
         audioPlayerServiceIntent.putExtra("file", song.getUri().toString());
         audioPlayerServiceIntent.setAction("com.wishify.action.FORCE_PLAY"); // Lorsqu'on doit potentiellement stop une chanson en cours et la remplacer
         startService(audioPlayerServiceIntent);
+
+        //Check is service is active
+        if (!serviceBound) {
+            bindService(audioPlayerServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
     }
 
-    public void stopAudio() {
-        stopService(audioPlayerServiceIntent);
+    public void pauseAudio() {
+        playpause.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_play));
+        audioPlayerServiceIntent.setAction("com.wishify.action.PAUSE");
+        startService(audioPlayerServiceIntent);
     }
 
+    public void resumeAudio() {
+        playpause.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_pause));
+        audioPlayerServiceIntent.setAction("com.wishify.action.RESUME");
+        startService(audioPlayerServiceIntent);
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("ServiceState", serviceBound);
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        serviceBound = savedInstanceState.getBoolean("ServiceState");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (serviceBound) {
+            unbindService(serviceConnection);
+            //service is active
+            player.stopSelf();
+        }
+    }
 
 }
