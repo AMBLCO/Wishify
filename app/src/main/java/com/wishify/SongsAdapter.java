@@ -22,6 +22,7 @@ import java.util.List;
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> implements Filterable
 {
     private MainActivity mainActivity;
+    private List<Song> songList = Globals.getSongsList();
     private List<Song> songListFilter = Globals.getSongsList();
 
     public SongsAdapter(MainActivity mainActivity)
@@ -42,17 +43,17 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Fetch from Audio File Discovery Service
 
-        holder.getSongImageView().setImageBitmap(Globals.getSongsList().get(position).getBitmap());
-        holder.getSongNameView().setText(Globals.getSongsList().get(position).getTitle());
+        holder.getSongImageView().setImageBitmap(songList.get(position).getBitmap());
+        holder.getSongNameView().setText(songList.get(position).getTitle());
 
-        String artNalb = Globals.getSongsList().get(position).getArtist() + " - " + Globals.getSongsList().get(position).getAlbum();
+        String artNalb = songList.get(position).getArtist() + " - " + songList.get(position).getAlbum();
 
         holder.getSongArtistAndAlbumView().setText(artNalb);
     }
 
     @Override
     public int getItemCount() {
-        return Globals.getSongsList().size();
+        return songList.size();
     }
 
     @Override
@@ -84,7 +85,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                Globals.setSongsList((List<Song>) filterResults.values);
+                songList = ((List<Song>) filterResults.values);
+                //notifyDataSetChanged();
             }
         };
         return filter;
