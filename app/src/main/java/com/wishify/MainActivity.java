@@ -41,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout mBottomSheet;
 
 
+    // Get instances of fragments
+    private ArtistsFragment artistsFragment;
+    private AlbumsFragment albumsFragment;
+    private SongsFragment songsFragment;
+    private PlaylistsFragment playlistsFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +68,24 @@ public class MainActivity extends AppCompatActivity {
 
         weakReference = new WeakReference<>(MainActivity.this);
 
+        artistsFragment = new ArtistsFragment();
+        albumsFragment = new AlbumsFragment();
+        songsFragment = new SongsFragment();
+        playlistsFragment = new PlaylistsFragment();
+
         // Variables
         FragmentManager fragMana = getSupportFragmentManager();
+
+        fragMana.beginTransaction()
+                .add(R.id.mainFragmentContainerView, artistsFragment, "artists")
+                .add(R.id.mainFragmentContainerView, albumsFragment, "albums")
+                .add(R.id.mainFragmentContainerView, songsFragment, "songs")
+                .add(R.id.mainFragmentContainerView, playlistsFragment, "playlists")
+                .hide(artistsFragment)
+                .hide(albumsFragment)
+                .hide(playlistsFragment)
+                .show(songsFragment)
+                .commit();
 
         // On commence sur la page des chansons
         navigView.setSelectedItemId(R.id.songs);
@@ -75,11 +97,13 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.artists)
                 {
                     // On doit changer de Fragment si et seulement si le fragment visible n'est pas celui désiré
-                    if (!(fragMana.findFragmentById(R.id.mainFragmentContainerView) instanceof ArtistsFragment))
+                    if (artistsFragment.isHidden())
                     {
                         fragMana.beginTransaction()
-                                .setReorderingAllowed(true)
-                                .replace(R.id.mainFragmentContainerView, ArtistsFragment.class, null)
+                                .show(artistsFragment)
+                                .hide(albumsFragment)
+                                .hide(playlistsFragment)
+                                .hide(songsFragment)
                                 .commit();
 
                     }
@@ -88,11 +112,13 @@ public class MainActivity extends AppCompatActivity {
                 else if (item.getItemId() == R.id.albums)
                 {
                     // On doit changer de Fragment si et seulement si le fragment visible n'est pas celui désiré
-                    if (!(fragMana.findFragmentById(R.id.mainFragmentContainerView) instanceof AlbumsFragment))
+                    if (albumsFragment.isHidden())
                     {
                         fragMana.beginTransaction()
-                                .setReorderingAllowed(true)
-                                .replace(R.id.mainFragmentContainerView, AlbumsFragment.class, null)
+                                .hide(artistsFragment)
+                                .show(albumsFragment)
+                                .hide(playlistsFragment)
+                                .hide(songsFragment)
                                 .commit();
 
                     }
@@ -101,15 +127,18 @@ public class MainActivity extends AppCompatActivity {
                 else if (item.getItemId() == R.id.songs)
                 {
                     // On doit changer de Fragment si et seulement si le fragment visible n'est pas celui désiré
-                    if (!(fragMana.findFragmentById(R.id.mainFragmentContainerView) instanceof SongsFragment))
+                    if (songsFragment.isHidden())
                     {
                         fragMana.beginTransaction()
-                                .setReorderingAllowed(true)
-                                .replace(R.id.mainFragmentContainerView, SongsFragment.class, null)
+                                .hide(artistsFragment)
+                                .hide(albumsFragment)
+                                .hide(playlistsFragment)
+                                .show(songsFragment)
                                 .commit();
+
                         //SongsFragment songsFragment = ((SongsFragment) getSupportFragmentManager().findFragmentById(R.id.mainFragmentContainerView));
                         //if (songsFragment != null) {
-                            //songsFragment.setmMainActivity(MainActivity.this);
+                        //songsFragment.setmMainActivity(MainActivity.this);
                         //}
                     }
                     return true;
@@ -117,11 +146,13 @@ public class MainActivity extends AppCompatActivity {
                 else if (item.getItemId() == R.id.playlists)
                 {
                     // On doit changer de Fragment si et seulement si le fragment visible n'est pas celui désiré
-                    if (!(fragMana.findFragmentById(R.id.mainFragmentContainerView) instanceof PlaylistsFragment))
+                    if (playlistsFragment.isHidden())
                     {
                         fragMana.beginTransaction()
-                                .setReorderingAllowed(true)
-                                .replace(R.id.mainFragmentContainerView, PlaylistsFragment.class, null)
+                                .hide(artistsFragment)
+                                .hide(albumsFragment)
+                                .show(playlistsFragment)
+                                .hide(songsFragment)
                                 .commit();
 
                     }
