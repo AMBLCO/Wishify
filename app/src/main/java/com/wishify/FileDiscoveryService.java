@@ -71,6 +71,7 @@ public class FileDiscoveryService extends Service {
                     catch (Exception e)
                     {
                         Log.e("FILES", "File probably does not have readable mp3 tags");
+                        continue;
                     }
 
                     if (Objects.equals(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE), "audio/mpeg")) {
@@ -89,7 +90,7 @@ public class FileDiscoveryService extends Service {
                             if (songImage != null) {
                                 bitmap = BitmapFactory.decodeByteArray(songImage, 0, songImage.length);
                             }
-                            Log.d("FILES", "Adding song to list");
+                            Log.d("FILES", "Adding song to list: " + title);
                             songList.add(new Song(Uri.fromFile(file), title, artist, album, duration, bitmap));
 
                         } catch (Exception e) {
