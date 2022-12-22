@@ -7,6 +7,7 @@ import android.media.MediaMetadataRetriever;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -48,9 +49,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
         String artNalb = songList.get(position).getArtist() + " - " + songList.get(position).getAlbum();
 
         holder.getSongArtistAndAlbumView().setText(artNalb);
-
-
-
     }
 
     @Override
@@ -116,7 +114,22 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                 PopupMenu popupMenu = new PopupMenu(view.getContext(), view, Gravity.END);
                 popupMenu.getMenuInflater().inflate(R.menu.songs_context_menu, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener( item -> {
-                    Toast.makeText(view.getContext(), "Clicked popup", Toast.LENGTH_SHORT).show();
+
+                    if (item.getItemId() == R.id.addToPlaylist)
+                    {
+                        popupMenu.dismiss();
+                        PopupMenu playlistMenu = new PopupMenu(view.getContext(), view, Gravity.END);
+                        Menu menu = playlistMenu.getMenu();
+                        playlistMenu.getMenuInflater().inflate(R.menu.songs_playlists_menu, menu);
+                        menu.add("Test Playlist1");
+                        menu.add("Test Playlist2");
+                        playlistMenu.show();
+
+                    }
+                    else{
+                        // Handle Append and Add Next
+                        Toast.makeText(view.getContext(), "Clicked popup", Toast.LENGTH_SHORT).show();
+                    }
                     return false;
                 });
                 popupMenu.show();
