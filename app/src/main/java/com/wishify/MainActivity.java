@@ -35,6 +35,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -225,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (!songsFragment.isHidden()) {
-                    songsFragment.adapter.getFilter().filter(newText);
+                    filter(newText);
                 }
                 return false;
             }
@@ -358,6 +359,28 @@ public class MainActivity extends AppCompatActivity {
         playpause.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_pause));
         audioPlayerServiceIntent.setAction("com.wishify.action.RESUME");
         startService(audioPlayerServiceIntent);
+    }
+
+    public void filter(String text)
+    {
+        ArrayList<Song> filteredList = new ArrayList<>();
+
+        for(Song song : Globals.getSongsList())
+        {
+            if(song.getTitle().toLowerCase().contains(text))
+            {
+                filteredList.add(song);
+            }
+        }
+
+        if(filteredList.isEmpty())
+        {
+            Toast.makeText(this, "No song found", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            songsFragment.adapter.filterList(filteredList);
+        }
     }
 
     @Override
