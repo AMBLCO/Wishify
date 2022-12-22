@@ -45,6 +45,9 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
         String artNalb = songList.get(position).getArtist() + " - " + songList.get(position).getAlbum();
 
         holder.getSongArtistAndAlbumView().setText(artNalb);
+
+
+
     }
 
     @Override
@@ -103,6 +106,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             songView.setOnClickListener(view -> {
                 AudioPlayer.playAudio(Globals.getSongsList().get(getAdapterPosition()));
             });
+
+            songView.setOnLongClickListener(view -> {
+                Toast.makeText(songView.getContext(), "LONG CLICK", Toast.LENGTH_SHORT).show();
+                return true; // True indicates that we do not want to also call regular click listener
+            });
+
         }
 
         public ImageView getSongImageView() {

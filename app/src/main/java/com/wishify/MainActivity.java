@@ -166,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // WorkManager
-        // Request permission and crawl
+
+        // Request permission and crawl for audio files
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) // SDK 33
         {
             checkPerm(Manifest.permission.READ_MEDIA_AUDIO, READ_MEDIA_AUDIO_CODE);
@@ -214,6 +214,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    public void crawlAudioFiles()
+    {
+        // Deploy FileDiscoveryWorker crawler
+        Intent serviceIntent = new Intent(this, FileDiscoveryService.class);
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+
     // Permission manager
     public void checkPerm(String perm, int reqCode)
     {
@@ -238,14 +246,6 @@ public class MainActivity extends AppCompatActivity {
                 crawlAudioFiles();
             }
         }
-    }
-
-    // Manages FileDiscoveryWorker
-    public void crawlAudioFiles()
-    {
-        // Deploy FileDiscoveryWorker crawler
-        Intent serviceIntent = new Intent(this, FileDiscoveryService.class);
-        ContextCompat.startForegroundService(this, serviceIntent);
     }
 
     @Override
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         audioPlayerServiceIntent.putExtra("file", song.getUri().toString());
-        audioPlayerServiceIntent.setAction("com.wishify.action.FORCE_PLAY");
+        audioPlayerServiceIntent.setAction("com.wishify.action.FORCE_PLAY"); // Lorsqu'on doit potentiellement stop une chanson en cours et la remplacer
         startService(audioPlayerServiceIntent);
     }
 
