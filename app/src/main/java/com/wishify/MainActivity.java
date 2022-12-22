@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -263,6 +264,20 @@ public class MainActivity extends AppCompatActivity {
             else
             {
                 // We did not get perm granted
+                Log.e("PERMISSIONS", "Permission READ_EXTERNAL_STORAGE was denied!");
+            }
+        }
+        else if (reqCode == READ_MEDIA_AUDIO_CODE)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                // We got perm granted
+                // Start crawling
+                crawlAudioFiles();
+            }
+            else{
+                // We did not get perm granted
+                Log.e("PERMISSIONS", "Permission READ_MEDIA_AUDIO was denied!");
             }
         }
     }
@@ -282,5 +297,8 @@ public class MainActivity extends AppCompatActivity {
     public void stopAudio() {
         stopService(audioPlayerServiceIntent);
     }
+
+
+
 
 }
