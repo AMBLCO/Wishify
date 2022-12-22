@@ -22,6 +22,7 @@ import android.os.IBinder;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -185,8 +186,6 @@ public class FileDiscoveryService extends Service {
     }
 
 
-
-    // TESTING
     private static List<Song> findAudioFilesFromNavig(Context appContext)
     {
         contentResolver = appContext.getContentResolver();

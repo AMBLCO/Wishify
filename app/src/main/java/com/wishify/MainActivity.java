@@ -13,6 +13,7 @@ import androidx.work.WorkRequest;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -132,7 +133,15 @@ public class MainActivity extends AppCompatActivity {
 
         // WorkManager
         // Request permission and crawl
-        checkPerm(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) // 33
+        {
+            checkPerm(Manifest.permission.READ_MEDIA_AUDIO, READ_MEDIA_AUDIO_CODE);
+        }
+        else
+        {
+            checkPerm(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_CODE);
+        }
+
 
         audioPlayerServiceIntent = new Intent(this, AudioPlayerService.class);
     }
@@ -155,16 +164,26 @@ public class MainActivity extends AppCompatActivity {
     // Permission manager
     public void checkPerm(String perm, int reqCode)
     {
-        if (ContextCompat.checkSelfPermission(MainActivity.this, perm) == PackageManager.PERMISSION_DENIED)
-        {
-            // Ask for perm
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] { perm }, reqCode);
+        if (reqCode == READ_EXTERNAL_STORAGE_CODE) {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, perm) == PackageManager.PERMISSION_DENIED) {
+                // Ask for perm
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{perm}, reqCode);
+            } else {
+                // We already have perms
+                // Start crawling
+                crawlAudioFiles();
+            }
         }
-        else
+        else if (reqCode == READ_MEDIA_AUDIO_CODE)
         {
-            // We already have perms
-            // Start crawling
-            crawlAudioFiles();
+            if (ContextCompat.checkSelfPermission(MainActivity.this, perm) == PackageManager.PERMISSION_DENIED) {
+                // Ask for perm
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{perm}, reqCode);
+            } else {
+                // We already have perms
+                // Start crawling
+                crawlAudioFiles();
+            }
         }
     }
 
