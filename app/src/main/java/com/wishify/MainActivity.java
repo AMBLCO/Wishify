@@ -371,21 +371,28 @@ public class MainActivity extends AppCompatActivity {
     public void filter(String text)
     {
         Globals.clearFilteredList();
-        for(Song song : Globals.getSongsList())
+        if(text.isEmpty())
         {
-            if(song.getTitle().toLowerCase().contains(text))
-            {
-                Globals.addToFilteredList(song);
-            }
-        }
-
-        if(Globals.getFilteredList().isEmpty())
-        {
-            Toast.makeText(this, "No song found", Toast.LENGTH_SHORT).show();
+            songsFragment.adapter.filterList(Globals.getSongsList());
         }
         else
         {
-            songsFragment.adapter.filterList(Globals.getFilteredList());
+            for(Song song : Globals.getSongsList())
+            {
+                if(song.getTitle().toLowerCase().contains(text))
+                {
+                    Globals.addToFilteredList(song);
+                }
+            }
+
+            if(Globals.getFilteredList().isEmpty())
+            {
+                Toast.makeText(this, "No song found", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                songsFragment.adapter.filterList(Globals.getFilteredList());
+            }
         }
     }
 
