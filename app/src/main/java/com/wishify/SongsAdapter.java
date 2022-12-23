@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.media.Image;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
@@ -121,7 +123,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
                                         if (Globals.getPlaylists().get(playlistName) == null) {
 
                                             if (!playlistName.equals("")) {
-                                                if (Globals.addPlaylist(new Playlist(playlistName, new ArrayList<Song>())) == 1) { // 1 Means success
+                                                if (Globals.addPlaylist(new Playlist(playlistName, new HashMap<Uri, Song>())) == 1) { // 1 Means success
                                                     Toast.makeText(view.getContext(), "Added " + playlistName + " to playlists", Toast.LENGTH_LONG).show();
                                                 } else {
                                                     Toast.makeText(view.getContext(), "Could not create playlist!", Toast.LENGTH_LONG).show();

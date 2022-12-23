@@ -38,6 +38,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -250,7 +251,7 @@ public class FileDiscoveryService extends Service {
             {
                 String playlistName = file.getName().substring(0, file.getName().length() - 4); // Remove .txt the wish.com way
                 Log.d("PLAYLISTS_FETCHER", "Found playlist: " + playlistName);
-                List<Song> list = new ArrayList<>();
+                HashMap<Uri, Song> list = new HashMap<>();
                 // We must fetch its songs
                 try (BufferedReader playlistReader = new BufferedReader(new InputStreamReader(appContext.openFileInput(playlistName + ".txt")))) {
                     String songUri;
@@ -260,7 +261,7 @@ public class FileDiscoveryService extends Service {
                             Song song = Globals.getSongsMap().get(Uri.parse(songUri));
                             if (song != null) {
                                 Log.d("PLAYLIST " + playlistName, "Found song: " + song.getTitle());
-                                list.add(song);
+                                list.put(song.getUri(), song);
                             }
                         }
                     } while(songUri != null);

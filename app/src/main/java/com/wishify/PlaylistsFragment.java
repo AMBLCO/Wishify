@@ -34,4 +34,10 @@ public class PlaylistsFragment extends Fragment {
         DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), HORIZONTAL);
         recView.addItemDecoration(decoration);
     }
+
+    public void refresh()
+    {
+        adapter.refresh();
+        adapter.notifyDataSetChanged();
+    }
 }

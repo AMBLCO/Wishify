@@ -78,7 +78,7 @@ public class Globals {
             // Create file
             writePlaylistFile(playlist);
             playlists.put(playlist.getName(), playlist);
-            PlaylistsFragment.adapter.notifyDataSetChanged();
+            //PlaylistsFragment.adapter.notifyDataSetChanged();
             return 1;
         }
         catch(Exception e)
@@ -91,7 +91,7 @@ public class Globals {
     }
 
     private static void writePlaylistFile(Playlist playlist) throws IOException {
-        try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(appContext.openFileOutput(playlist.getName() + ".txt", Context.MODE_APPEND))))
+        try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(appContext.openFileOutput(playlist.getName() + ".txt", Context.MODE_PRIVATE))))
         {
             // File has been created
             for (Song song : playlist.getSongs())
