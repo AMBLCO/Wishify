@@ -2,6 +2,7 @@ package com.wishify;
 
 import static com.wishify.Globals.addSongsToQueue;
 import static com.wishify.Globals.queue;
+import static com.wishify.Globals.queuePos;
 import static java.lang.String.valueOf;
 
 import android.media.Image;
@@ -97,9 +98,15 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
                         playlistMenu.show();
 
                     }
-                    else{
-                        // Handle Append and Add Next
-                        Toast.makeText(view.getContext(), "Clicked popup", Toast.LENGTH_SHORT).show();
+
+                    if (item.getItemId() == R.id.append)
+                    {
+                        queue.add(songList.get(getAdapterPosition()));
+                    }
+
+                    if (item.getItemId() == R.id.playNext)
+                    {
+                        queue.add(queuePos + 1, songList.get(getAdapterPosition()));
                     }
                     return false;
                 });

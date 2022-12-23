@@ -1,9 +1,6 @@
 package com.wishify;
 
 import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
-import static com.wishify.Globals.addSongsToQueue;
-import static com.wishify.Globals.clearFilteredList;
-import static com.wishify.Globals.getFilteredList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
