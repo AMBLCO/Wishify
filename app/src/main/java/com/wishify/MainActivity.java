@@ -35,7 +35,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomSheetBehavior mBottomSheetBehavior;
     private FrameLayout mBottomSheet;
+
+    private final MusicControl popUpClass = new MusicControl();
+
     private FragmentManager fragMana;
 
     private ImageButton playpause;
@@ -57,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
     private AudioPlayerService player;
     boolean serviceBound = false;
-
 
     // Get instances of fragments
     private ArtistsFragment artistsFragment;
@@ -78,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         mBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MusicControl popUpClass = new MusicControl();
                 popUpClass.showPopupWindow(view);
             }
         });
@@ -335,13 +335,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void playAudio(Song song) {
-        if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-        playpause.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_pause));
-        changeBottomSheetSong(song);
-
         audioPlayerServiceIntent.putExtra("file", song.getUri().toString());
-        audioPlayerServiceIntent.setAction("com.wishify.action.FORCE_PLAY"); // Lorsqu'on doit potentiellement stop une chanson en cours et la remplacer
+        audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
         startService(audioPlayerServiceIntent);
 
         //Check if service is active
@@ -350,7 +345,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void changeBottomSheetSong(Song song) {
+    public void showAndUpdateBottomSheet(Song song) {
+        if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        playpause.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_pause));
+
         musicImage.setImageBitmap(song.getBitmap());
         songName.setText(song.getTitle());
         songArtistAndAlbum.setText(song.getArtist() + " - " + song.getAlbum());
@@ -370,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void stopAudio() {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        popUpClass.closePopup();
     }
 
     public void goNext() {

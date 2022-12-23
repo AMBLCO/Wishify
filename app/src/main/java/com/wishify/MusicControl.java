@@ -7,8 +7,8 @@ import static com.wishify.AudioPlayer.resumeAudio;
 import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
 import static com.wishify.Globals.queue;
 import static com.wishify.Globals.queuePos;
+import static com.wishify.Globals.toggleShuffle;
 
-import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.content.res.AppCompatResources;
 
@@ -27,11 +26,15 @@ public class MusicControl {
     //PopupWindow display method
 
     private ImageButton previousTrack;
-    private ImageButton playpause;
+    private static ImageButton playpause;
     private ImageButton nextTrack;
+    private static ImageButton repeat;
+    private static ImageButton shuffle;
     private static ImageView songImage;
     private static TextView songName;
     private static TextView songArtistAndAlbum;
+
+    private PopupWindow popupWindow;
 
     public void showPopupWindow(final View view) {
         //Create a View object yourself through inflater
@@ -46,7 +49,7 @@ public class MusicControl {
         boolean focusable = true;
 
         //Create a window with our parameters
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+        popupWindow = new PopupWindow(popupView, width, height, focusable);
 
         //Set the location of the window on the screen
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
@@ -54,11 +57,13 @@ public class MusicControl {
         previousTrack = popupView.findViewById(R.id.controlPreviousTrackButton);
         playpause = popupView.findViewById(R.id.controlPlayPauseButton);
         nextTrack = popupView.findViewById(R.id.controlNextTrackButton);
+        repeat = popupView.findViewById(R.id.controlRepeatButton);
+        shuffle = popupView.findViewById(R.id.controlShuffleButton);
         songImage = popupView.findViewById(R.id.controlSongImage);
         songName = popupView.findViewById(R.id.controlSongName);
         songArtistAndAlbum = popupView.findViewById(R.id.controlSongArtistAndAlbum);
 
-        updateMusicControlSong();
+        updateMusicControl();
 
         previousTrack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +94,24 @@ public class MusicControl {
             }
         });
 
+        repeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Globals.repeat = !Globals.repeat;
+                if (Globals.repeat) repeat.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_repeat_on));
+                else repeat.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_repeat_off));
+            }
+        });
+
+        shuffle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleShuffle();
+                if (Globals.shuffle) shuffle.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_shuffle_on));
+                else shuffle.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_shuffle_off));
+            }
+        });
+
         //Handler for clicking on the inactive zone of the window
         popupView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -101,9 +124,19 @@ public class MusicControl {
         });
     }
 
-    public static void updateMusicControlSong() {
+    public static void updateMusicControl() {
         songImage.setImageBitmap(queue.get(queuePos).getBitmap());
         songName.setText(queue.get(queuePos).getTitle());
         songArtistAndAlbum.setText(queue.get(queuePos).getArtist() + " - " + queue.get(queuePos).getAlbum());
+
+        if (getMediaPlayerStatus() == 3) { playpause.setImageDrawable(AppCompatResources.getDrawable(playpause.getContext(), R.drawable.ic_play)); }
+        if (getMediaPlayerStatus() != 3) { playpause.setImageDrawable(AppCompatResources.getDrawable(playpause.getContext(), R.drawable.ic_pause)); }
+
+        if (Globals.repeat) repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_on));
+        else repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_off));
+        if (Globals.shuffle) shuffle.setImageDrawable(AppCompatResources.getDrawable(shuffle.getContext(), R.drawable.ic_shuffle_on));
+        else shuffle.setImageDrawable(AppCompatResources.getDrawable(shuffle.getContext(), R.drawable.ic_shuffle_off));
     }
+
+    public void closePopup() { if (popupWindow.isShowing()) popupWindow.dismiss(); }
 }

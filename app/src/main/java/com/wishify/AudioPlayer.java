@@ -10,15 +10,15 @@ public class AudioPlayer {
 
     public static void playAudio(Song song) { mainActivity.playAudio(song); }
 
-    public static void changeBottomSheet(Song song) { mainActivity.changeBottomSheetSong(song); }
+    public static void changeBottomSheet(Song song) { mainActivity.showAndUpdateBottomSheet(song); }
 
     public static void pauseAudio() { mainActivity.pauseAudio(); }
 
     public static void resumeAudio() { mainActivity.resumeAudio(); }
 
+    public static void stopAudio() { mainActivity.stopAudio(); }
+
     public static void goNext() { mainActivity.goNext(); }
 
     public static void goPrevious() { mainActivity.goPrevious(); }
-
-    public static void stopAudio() { mainActivity.stopAudio(); }
 }
