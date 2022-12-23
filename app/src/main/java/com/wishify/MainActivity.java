@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (item.getItemId() == R.id.playlists)
                 {
+                    playlistsFragment.refresh();
                     // On doit changer de Fragment si et seulement si le fragment visible n'est pas celui désiré
                     if (playlistsFragment.isHidden())
                     {

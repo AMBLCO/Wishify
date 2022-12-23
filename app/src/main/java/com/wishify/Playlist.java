@@ -1,18 +1,21 @@
 package com.wishify;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 public class Playlist {
     private final String name;
-    private final List<Song> songs;
+    private final HashMap<Uri, Song> songs;
 
-    public Playlist(String name, List<Song> songs)
+    public Playlist(String name, HashMap<Uri, Song> songs)
     {
         this.name = name;
         this.songs = songs;
@@ -20,25 +23,19 @@ public class Playlist {
 
     public List<Song> getSongs()
     {
-        return this.songs;
+        return new ArrayList<Song>(this.songs.values());
     }
 
     public int addSong(Song song)
     {
-        // Quick check (could replace with hashmap)
-        for (Song inSong : songs)
-        {
-            if (Objects.equals(inSong.getTitle(), song.getTitle())) // Is duplicate
-            {
-                return 0;
-            }
-        }
+
+
 
         try {
             // Create file
             writeSongToPlaylistFile(song);
-            songs.add(song);
-            PlaylistsFragment.adapter.notifyDataSetChanged();
+            songs.put(song.getUri(), song);
+            //PlaylistsFragment.adapter.notifyDataSetChanged();
             return 1;
         }
         catch(Exception e)
@@ -64,5 +61,9 @@ public class Playlist {
 
     public String getName() {
         return this.name;
+    }
+
+    public int getSize() {
+        return songs.size();
     }
 }

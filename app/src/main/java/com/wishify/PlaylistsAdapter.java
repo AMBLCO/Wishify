@@ -27,10 +27,10 @@ import java.util.List;
 
 public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.ViewHolder>{
 
-    private static List<Playlist> playlistList =  new ArrayList<>(Globals.getPlaylists().values());
+    private static List<Playlist> playlistList =  new ArrayList<>(Globals.getPlaylists().values()); // Could be null
 
     public PlaylistsAdapter() {
-        Log.d("PLAYLISTS", "Playlists is size: " + playlistList.size());
+        Log.d("PLAYLISTS_CONSTRUCTOR", "Playlists is size: " + playlistList.size());
     }
 
     @NonNull
@@ -44,8 +44,13 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getPlaylistImageView().setImageBitmap(playlistList.get(position).getSongs().get(0).getBitmap());
-        holder.getPlaylistNameView().setText(playlistList.get(position).getName());
+        if (playlistList.size() != 0) {
+            if (playlistList.get(position).getSize() != 0) {
+                holder.getPlaylistImageView().setImageBitmap(playlistList.get(position).getSongs().get(0).getBitmap());
+            }
+            holder.getPlaylistNameView().setText(playlistList.get(position).getName());
+
+        }
     }
 
     @Override
@@ -53,6 +58,10 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
         return playlistList.size();
     }
 
+    public void refresh()
+    {
+        playlistList = new ArrayList<>(Globals.getPlaylists().values());
+    }
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
