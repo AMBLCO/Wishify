@@ -24,6 +24,7 @@ public class Globals {
 
     public static List<Song> queue = new ArrayList<>();
     public static int queuePos;
+    public static boolean prepared;
     public static int repeat;
     public static int repeatStartPos;
     public static boolean shuffle;

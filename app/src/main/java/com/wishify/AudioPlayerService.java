@@ -2,6 +2,7 @@ package com.wishify;
 
 import static com.wishify.AudioPlayer.changeBottomSheet;
 import static com.wishify.AudioPlayer.stopAudio;
+import static com.wishify.Globals.prepared;
 import static com.wishify.Globals.repeat;
 import static com.wishify.Globals.repeatStartPos;
 import static com.wishify.Globals.resetAndGenerateShuffleList;
@@ -56,6 +57,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             Log.d("AUDIO_PLAYER", "Done playing song");
             mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
             mediaPlayer.reset();
+            prepared = false;
             mediaPlayerStatus = STATE_IDLE;
 
             if (repeat == 2)
@@ -99,6 +101,12 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     };
 
+    private final MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+            prepared = true;
+        }
+    };
 
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -108,6 +116,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             if (mediaPlayerStatus == STATE_STARTED || mediaPlayerStatus == STATE_PAUSED)
             {
                 mediaPlayer.reset();
+                prepared = false;
                 mediaPlayerStatus = STATE_IDLE;
             }
 
@@ -240,6 +249,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 Log.d("AUDIO_PLAYER", "Go next");
                 mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
                 mediaPlayer.reset();
+                prepared = false;
                 mediaPlayerStatus = STATE_IDLE;
 
                 shuffleListPos++;
@@ -255,6 +265,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 Log.d("AUDIO_PLAYER", "Go next");
                 mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
                 mediaPlayer.reset();
+                prepared = false;
                 mediaPlayerStatus = STATE_IDLE;
 
                 queuePos++;
@@ -272,6 +283,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 Log.d("AUDIO_PLAYER", "Go previous");
                 mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
                 mediaPlayer.reset();
+                prepared = false;
                 mediaPlayerStatus = STATE_IDLE;
 
                 shuffleListPos--;
@@ -287,6 +299,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 Log.d("AUDIO_PLAYER", "Go previous");
                 mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
                 mediaPlayer.reset();
+                prepared = false;
                 mediaPlayerStatus = STATE_IDLE;
 
                 queuePos--;

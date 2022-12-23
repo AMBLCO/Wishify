@@ -7,10 +7,12 @@ import static com.wishify.AudioPlayer.resumeAudio;
 import static com.wishify.AudioPlayer.seekTo;
 import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
 import static com.wishify.AudioPlayerService.mediaPlayer;
+import static com.wishify.Globals.prepared;
 import static com.wishify.Globals.queue;
 import static com.wishify.Globals.queuePos;
 import static com.wishify.Globals.toggleShuffle;
 
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -203,15 +205,16 @@ public class MusicControl {
                 int total = mediaPlayer.getDuration();
 
                 while (mediaPlayer != null && mediaPlayer.isPlaying() && currentPosition < total) {
-                    try {
-                        Thread.sleep(1000);
-                        currentPosition = mediaPlayer.getCurrentPosition();
-                    } catch (Exception e) {
-                        return;
+                    if (prepared)
+                    {
+                        try {
+                            Thread.sleep(40); //Smooth movement
+                            currentPosition = mediaPlayer.getCurrentPosition();
+                        } catch (Exception e) {
+                            return;
+                        }
+                        seekbar.setProgress(currentPosition);
                     }
-
-                    seekbar.setProgress(currentPosition);
-
                 }
                 Log.d("SEEKBAR_UPDATE", "Stopped");
             }
