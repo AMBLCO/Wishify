@@ -1,10 +1,13 @@
 package com.wishify;
 
+import static com.wishify.AudioPlayer.goNext;
+import static com.wishify.AudioPlayer.goPrevious;
 import static com.wishify.AudioPlayer.pauseAudio;
 import static com.wishify.AudioPlayer.resumeAudio;
 import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
+import static com.wishify.Globals.queue;
+import static com.wishify.Globals.queuePos;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,6 +20,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.content.res.AppCompatResources;
+
 public class MusicControl {
 
     //PopupWindow display method
@@ -24,19 +29,9 @@ public class MusicControl {
     private ImageButton previousTrack;
     private ImageButton playpause;
     private ImageButton nextTrack;
-    private ImageView songImage;
-    private TextView songName;
-    private TextView songArtistAndAlbum;
-
-    private Drawable image;
-    private String name;
-    private String artistAndAlbum;
-
-    MusicControl(Drawable image, String name, String artistAndAlbum) {
-        this.image = image;
-        this.name = name;
-        this.artistAndAlbum = artistAndAlbum;
-    }
+    private static ImageView songImage;
+    private static TextView songName;
+    private static TextView songArtistAndAlbum;
 
     public void showPopupWindow(final View view) {
         //Create a View object yourself through inflater
@@ -63,34 +58,34 @@ public class MusicControl {
         songName = popupView.findViewById(R.id.controlSongName);
         songArtistAndAlbum = popupView.findViewById(R.id.controlSongArtistAndAlbum);
 
-        songImage.setImageDrawable(image);
-        songName.setText(name);
-        songArtistAndAlbum.setText(artistAndAlbum);
+        updateMusicControlSong();
 
         previousTrack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(view.getContext(), "previous track", Toast.LENGTH_SHORT).show();
-
+                goPrevious();
             }
         });
 
         playpause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getMediaPlayerStatus() != 3) pauseAudio();
+                if (getMediaPlayerStatus() != 3) {
+                    pauseAudio();
+                    playpause.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_play));
+                }
 
-                if (getMediaPlayerStatus() == 3) resumeAudio();
+                if (getMediaPlayerStatus() == 3) {
+                    resumeAudio();
+                    playpause.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_pause));
+                }
             }
         });
 
         nextTrack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(view.getContext(), "next track", Toast.LENGTH_SHORT).show();
-
+                goNext();
             }
         });
 
@@ -106,4 +101,9 @@ public class MusicControl {
         });
     }
 
+    public static void updateMusicControlSong() {
+        songImage.setImageBitmap(queue.get(queuePos).getBitmap());
+        songName.setText(queue.get(queuePos).getTitle());
+        songArtistAndAlbum.setText(queue.get(queuePos).getArtist() + " - " + queue.get(queuePos).getAlbum());
+    }
 }

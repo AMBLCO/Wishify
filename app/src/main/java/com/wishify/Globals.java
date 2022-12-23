@@ -8,6 +8,7 @@ import java.util.List;
 public class Globals {
     private static List<Song> songsList = new ArrayList<>();
     public static List<Song> queue = new ArrayList<>();
+    public static int queuePos;
     private static List<Song> filteredList = new ArrayList<>();
 
     private static List<Playlist> playlists = new ArrayList<>();

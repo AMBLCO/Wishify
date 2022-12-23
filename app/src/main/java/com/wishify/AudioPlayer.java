@@ -16,5 +16,9 @@ public class AudioPlayer {
 
     public static void resumeAudio() { mainActivity.resumeAudio(); }
 
+    public static void goNext() { mainActivity.goNext(); }
+
+    public static void goPrevious() { mainActivity.goPrevious(); }
+
     public static void stopAudio() { mainActivity.stopAudio(); }
 }

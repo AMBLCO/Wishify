@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MusicControl popUpClass = new MusicControl(musicImage.getDrawable(), songName.getText().toString(), songArtistAndAlbum.getText().toString());
+                MusicControl popUpClass = new MusicControl();
                 popUpClass.showPopupWindow(view);
             }
         });
@@ -371,6 +371,20 @@ public class MainActivity extends AppCompatActivity {
         startService(audioPlayerServiceIntent);
     }
 
+    public void stopAudio() {
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
+    public void goNext() {
+        audioPlayerServiceIntent.setAction("com.wishify.action.NEXT");
+        startService(audioPlayerServiceIntent);
+    }
+
+    public void goPrevious() {
+        audioPlayerServiceIntent.setAction("com.wishify.action.PREVIOUS");
+        startService(audioPlayerServiceIntent);
+    }
+
     public void filter(String text)
     {
         Globals.clearFilteredList();
@@ -397,10 +411,6 @@ public class MainActivity extends AppCompatActivity {
                 songsFragment.adapter.filterList(Globals.getFilteredList());
             }
         }
-    }
-
-    public void stopAudio() {
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     @Override

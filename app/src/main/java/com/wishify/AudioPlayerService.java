@@ -3,6 +3,8 @@ package com.wishify;
 import static com.wishify.AudioPlayer.changeBottomSheet;
 import static com.wishify.AudioPlayer.stopAudio;
 import static com.wishify.Globals.queue;
+import static com.wishify.Globals.queuePos;
+import static com.wishify.MusicControl.updateMusicControlSong;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -29,7 +31,6 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
     private static MediaPlayer mediaPlayer = new MediaPlayer(); // We want only one MediaPlayer running at a given time.
     private static int mediaPlayerStatus = 0; // Start in STATE_IDLE
 
-    private static int queuePos;
     private int resumePosition;
 
     // Arbitrary constants
@@ -67,6 +68,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                 try {
                     mediaPlayer.setDataSource(getApplicationContext(), queue.get(queuePos).getUri());
                     changeBottomSheet(queue.get(queuePos));
+                    updateMusicControlSong();
                     mediaPlayerStatus = STATE_INITIALIZED;
                     mediaPlayer.prepareAsync();
                 } catch (IOException e) {
@@ -209,11 +211,48 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
     }
 
     private void goNext() {
+        if (queuePos != queue.size() - 1)
+        {
+            Log.d("AUDIO_PLAYER", "Go next");
+            mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
+            mediaPlayer.reset();
+            mediaPlayerStatus = STATE_IDLE;
 
+            queuePos++;
+
+            try {
+                mediaPlayer.setDataSource(getApplicationContext(), queue.get(queuePos).getUri());
+                changeBottomSheet(queue.get(queuePos));
+                updateMusicControlSong();
+                mediaPlayerStatus = STATE_INITIALIZED;
+                mediaPlayer.prepareAsync();
+            } catch (IOException e) {
+                e.printStackTrace();
+                mediaPlayerStatus = STATE_ERROR;
+            }
+        }
     }
 
     private void goPrevious() {
+        if (queuePos != 0)
+        {
+            Log.d("AUDIO_PLAYER", "Go previous");
+            mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
+            mediaPlayer.reset();
+            mediaPlayerStatus = STATE_IDLE;
 
+            queuePos--;
+
+            try {
+                mediaPlayer.setDataSource(getApplicationContext(), queue.get(queuePos).getUri());
+                changeBottomSheet(queue.get(queuePos));
+                updateMusicControlSong();
+                mediaPlayerStatus = STATE_INITIALIZED;
+                mediaPlayer.prepareAsync();
+            } catch (IOException e) {
+                e.printStackTrace();
+                mediaPlayerStatus = STATE_ERROR;
+            }
+        }
     }
-
 }
