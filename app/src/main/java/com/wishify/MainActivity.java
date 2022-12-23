@@ -2,6 +2,8 @@ package com.wishify;
 
 import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
 import static com.wishify.Globals.addSongsToQueue;
+import static com.wishify.Globals.clearFilteredList;
+import static com.wishify.Globals.getFilteredList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -368,23 +370,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void filter(String text)
     {
-        ArrayList<Song> filteredList = new ArrayList<>();
-
+        Globals.clearFilteredList();
         for(Song song : Globals.getSongsList())
         {
             if(song.getTitle().toLowerCase().contains(text))
             {
-                filteredList.add(song);
+                Globals.addToFilteredList(song);
             }
         }
 
-        if(filteredList.isEmpty())
+        if(Globals.getFilteredList().isEmpty())
         {
             Toast.makeText(this, "No song found", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            songsFragment.adapter.filterList(filteredList);
+            songsFragment.adapter.filterList(Globals.getFilteredList());
         }
     }
 
