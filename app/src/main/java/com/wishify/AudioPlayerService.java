@@ -114,7 +114,6 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             if (mediaPlayerStatus == STATE_IDLE) {
                 try {
                     mediaPlayer.setDataSource(getApplicationContext(), Uri.parse(intent.getExtras().getString("file")));
-                    queuePos = 0;
                     mediaPlayerStatus = STATE_INITIALIZED;
                 } catch (IOException e) {
                     e.printStackTrace();
