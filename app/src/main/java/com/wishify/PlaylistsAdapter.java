@@ -72,7 +72,10 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
                     if (item.getItemId() == R.id.deletePlaylist)
                     {
                         // bye bye playlist
-
+                        if (!Globals.deletePlaylist(playlistList.get(getAdapterPosition()).getName()))
+                        {
+                            Toast.makeText(view.getContext(), "Could not delete playlist!", Toast.LENGTH_LONG).show();
+                        }
                     }
                     return false;
                 });

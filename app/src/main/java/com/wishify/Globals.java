@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -144,4 +145,21 @@ public class Globals {
     public static HashMap<String, Playlist> getPlaylists() {
         return playlists;
     }
+
+    public static boolean deletePlaylist(String playlistName)
+    {
+        File dir = appContext.getFilesDir();
+        File file = new File(dir, playlistName + ".txt");
+        if(file.delete())
+        {
+            // Cleanup
+            playlists.remove(playlistName);
+            return true;
+        }
+        else{
+            Log.e("PLAYLIST_DELETE", "Could not delete playlist!");
+            return false;
+        }
+    }
+
 }
