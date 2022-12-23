@@ -6,6 +6,7 @@ import static com.wishify.Globals.queuePos;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,13 +29,15 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
 
     private static List<Playlist> playlistList =  new ArrayList<>(Globals.getPlaylists().values());
 
-    public PlaylistsAdapter() {}
+    public PlaylistsAdapter() {
+        Log.d("PLAYLISTS", "Playlists is size: " + playlistList.size());
+    }
 
     @NonNull
     @Override
     public PlaylistsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rec_view_song_item, parent, false);
+                .inflate(R.layout.rec_view_playlist_item, parent, false);
 
         return new ViewHolder(view);
     }
@@ -51,12 +54,17 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
     }
 
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView playlistImageView;
         private TextView playlistNameView;
 
         public ViewHolder(@NonNull View playlistView) {
             super(playlistView);
+
+            playlistImageView = (ImageView) playlistView.findViewById(R.id.playlistImage);
+            playlistNameView = (TextView) playlistView.findViewById(R.id.playlistName);
+
 
             playlistView.setOnClickListener(view -> {
                 // Open playlist
