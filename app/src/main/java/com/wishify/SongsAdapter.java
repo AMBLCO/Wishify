@@ -5,6 +5,10 @@ import static com.wishify.Globals.queue;
 import static com.wishify.Globals.queuePos;
 import static java.lang.String.valueOf;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
@@ -13,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -83,7 +88,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 
             songView.setOnLongClickListener(view ->
             {
-                Log.d("LONG_CLICK", "Registered long click"); // Works
+                //Log.d("LONG_CLICK", "Registered long click");
                 PopupMenu popupMenu = new PopupMenu(view.getContext(), view, Gravity.END);
                 popupMenu.getMenuInflater().inflate(R.menu.songs_context_menu, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener( item -> {
@@ -94,10 +99,56 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
                         PopupMenu playlistMenu = new PopupMenu(view.getContext(), view, Gravity.END);
                         Menu menu = playlistMenu.getMenu();
                         playlistMenu.getMenuInflater().inflate(R.menu.songs_playlists_menu, menu);
-                        menu.add("Test Playlist1");
-                        menu.add("Test Playlist2");
-                        playlistMenu.show();
+                        for (String playlist : Globals.getPlaylists().keySet()) {
+                            menu.add(playlist);
+                        }
+                        playlistMenu.setOnMenuItemClickListener(playlistItem ->{
+                            if (playlistItem.getItemId() == R.id.newPlaylist)
+                            {
+                                // We create a new playlist
+                                // We ask for playlist name using dialog
+                                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                LayoutInflater li = LayoutInflater.from(view.getContext());
+                                View dialogView = li.inflate(R.layout.alert_dialog_new_playlist, null);
+                                builder.setTitle("Name of new playlist");
+                                builder.setView(dialogView);
+                                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // Add playlist to playlists
+                                        final EditText nameOfPlaylist = (EditText) dialogView.findViewById(R.id.nameOfPlaylist);
+                                        String playlistName = nameOfPlaylist.getText().toString();
+                                        if (Globals.getPlaylists().get(playlistName) == null) {
 
+                                            if (!playlistName.equals("")) {
+                                                if (Globals.addPlaylist(new Playlist(playlistName, new ArrayList<Song>())) == 1) { // 1 Means success
+                                                    Toast.makeText(view.getContext(), "Added " + playlistName + " to playlists", Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    Toast.makeText(view.getContext(), "Could not create playlist!", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        }
+                                        else{
+                                            Toast.makeText(view.getContext(), "Playlist already exists!", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                            }
+                            else
+                            {
+                                CharSequence chosenItem = playlistItem.getTitle();
+                                // add to this playlist
+                                if (Globals.getPlaylist(chosenItem.toString()) != null)
+                                {
+                                    Globals.getPlaylist(chosenItem.toString()).addSong(songList.get(getAdapterPosition()));
+                                }
+                                Toast.makeText(view.getContext(), "Added " + songList.get(getAdapterPosition()).getTitle() + " to playlist!", Toast.LENGTH_SHORT).show();
+                            }
+                            return false;
+                        });
+                        playlistMenu.show();
                     }
 
                     if (item.getItemId() == R.id.append)

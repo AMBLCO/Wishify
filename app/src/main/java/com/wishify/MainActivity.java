@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Globals.setAppContext(getApplicationContext());
+
         // Get layout elements
         BottomNavigationView navigView = findViewById(R.id.bottom_navigation);
         fragMana = getSupportFragmentManager();

@@ -25,4 +25,5 @@
     <string name="play_next">Play Next</string>
     <string name="add_to_playlist">Add To Playlist</string>
     <string name="append">Append</string>
+    <string name="new_playlist_name">New playlist name:</string>
 </resources>

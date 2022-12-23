@@ -1,14 +1,21 @@
 package com.wishify;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 public class Globals {
+    private static Context appContext;
+
     private static List<Song> songsList = new ArrayList<>();
 
     // TODO TEST THIS
@@ -22,7 +29,15 @@ public class Globals {
     public static int shuffleListPos;
     private static List<Song> filteredList = new ArrayList<>();
 
-    private static List<Playlist> playlists = new ArrayList<>();
+    private static final HashMap<String, Playlist> playlists = new HashMap<>();
+
+    public static Context getAppContext() {
+        return appContext;
+    }
+
+    public static void setAppContext(Context appContext) {
+        Globals.appContext = appContext;
+    }
 
     public static void addSongsToQueue(List<Song> songs) {
         queue.clear();
@@ -54,10 +69,37 @@ public class Globals {
         filteredList.clear();
     }
 
-    public static void addPlaylist(Playlist playlist)
+    public static int addPlaylist(Playlist playlist)
     {
-        playlists.add(playlist);
+        try {
+            // Create file
+            writePlaylistFile(playlist);
+            playlists.put(playlist.getName(), playlist);
+            return 1;
+        }
+        catch(Exception e)
+        {
+            Log.e("PLAYLIST_CREATE", e.toString());
+            Log.e("PLAYLIST_CREATE", "Failed to create playlist!");
+            return 0; // FAILURE
+        }
+
     }
+
+    private static void writePlaylistFile(Playlist playlist) throws IOException {
+        try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(appContext.openFileOutput(playlist.getName() + ".txt", Context.MODE_APPEND))))
+        {
+            // File has been created
+            for (Song song : playlist.getSongs())
+            {
+                writer.write(song.getUri().toString());
+                writer.newLine();
+            }
+            Log.d("PLAYLISTS_CREATE", "Created playlist");
+        }
+    }
+
+    public static Playlist getPlaylist(String nameOfPlaylist) { return playlists.get(nameOfPlaylist); }
 
     public static void toggleShuffle() {
         if (shuffle)
@@ -99,4 +141,7 @@ public class Globals {
     }
 
 
+    public static HashMap<String, Playlist> getPlaylists() {
+        return playlists;
+    }
 }
