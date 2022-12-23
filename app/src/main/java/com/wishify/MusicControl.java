@@ -135,9 +135,22 @@ public class MusicControl {
         repeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Globals.repeat = !Globals.repeat;
-                if (Globals.repeat) repeat.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_repeat_on));
-                else repeat.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_repeat_off));
+                if (Globals.repeat == 0)
+                {
+                    Globals.repeat = 1;
+                    Globals.repeatStartPos = queuePos;
+                    repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_on));
+                }
+                else if (Globals.repeat == 1)
+                {
+                    Globals.repeat = 2;
+                    repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_one_on));
+                }
+                else if (Globals.repeat == 2)
+                {
+                    Globals.repeat = 0;
+                    repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_off));
+                }
             }
         });
 
@@ -170,8 +183,9 @@ public class MusicControl {
         if (getMediaPlayerStatus() == 3) { playpause.setImageDrawable(AppCompatResources.getDrawable(playpause.getContext(), R.drawable.ic_play)); }
         if (getMediaPlayerStatus() != 3) { playpause.setImageDrawable(AppCompatResources.getDrawable(playpause.getContext(), R.drawable.ic_pause)); }
 
-        if (Globals.repeat) repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_on));
-        else repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_off));
+        if (Globals.repeat == 0) repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_off));
+        else if (Globals.repeat == 1) repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_on));
+        else if (Globals.repeat == 2) repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_one_on));
         if (Globals.shuffle) shuffle.setImageDrawable(AppCompatResources.getDrawable(shuffle.getContext(), R.drawable.ic_shuffle_on));
         else shuffle.setImageDrawable(AppCompatResources.getDrawable(shuffle.getContext(), R.drawable.ic_shuffle_off));
 
