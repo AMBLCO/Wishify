@@ -36,6 +36,7 @@ public class Globals {
     public static void addToFilteredList(Song song) {
         filteredList.add(song);
     }
+
     public static void clearFilteredList()
     {
         filteredList.clear();

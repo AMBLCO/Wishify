@@ -10,7 +10,7 @@ public class AudioPlayer {
 
     public static void playAudio(Song song) { mainActivity.playAudio(song); }
 
-    public static void changeBottomSheet(Song song) { mainActivity.changeBottomSheet(song); }
+    public static void changeBottomSheet(Song song) { mainActivity.changeBottomSheetSong(song); }
 
     public static void pauseAudio() { mainActivity.pauseAudio(); }
 

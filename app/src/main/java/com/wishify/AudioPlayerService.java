@@ -74,6 +74,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
                     mediaPlayerStatus = STATE_ERROR;
                 }
             }
+            else {
+                stopAudio();
+            }
         }
     };
 

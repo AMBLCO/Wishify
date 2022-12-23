@@ -27,8 +27,7 @@ import java.util.List;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 {
-    private List<Song> songList = Globals.getSongsList();
-    private List<Song> songListFilter = Globals.getSongsList();
+    private static List<Song> songList = Globals.getSongsList();
 
     public SongsAdapter() {}
 
@@ -76,8 +75,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
             songNameView = (TextView) songView.findViewById(R.id.songName);
             songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
             songView.setOnClickListener(view -> {
-                AudioPlayer.playAudio(Globals.getSongsList().get(getAdapterPosition()));
-                addSongsToQueue(Globals.getSongsList().subList(getAdapterPosition(), Globals.getSongsList().size()));
+                AudioPlayer.playAudio(songList.get(getAdapterPosition()));
+                addSongsToQueue(songList.subList(getAdapterPosition(), songList.size()));
             });
 
             songView.setOnLongClickListener(view ->

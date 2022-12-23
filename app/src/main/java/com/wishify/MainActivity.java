@@ -104,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         songName = findViewById(R.id.playerSongName);
         songArtistAndAlbum = findViewById(R.id.playerSongArtistAndAlbum);
 
+        songName.setSelected(true);
+        songArtistAndAlbum.setSelected(true);
+
         artistsFragment = new ArtistsFragment();
         albumsFragment = new AlbumsFragment();
         songsFragment = new SongsFragment();
@@ -338,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         playpause.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_pause));
-        changeBottomSheet(song);
+        changeBottomSheetSong(song);
 
         audioPlayerServiceIntent.putExtra("file", song.getUri().toString());
         audioPlayerServiceIntent.setAction("com.wishify.action.FORCE_PLAY"); // Lorsqu'on doit potentiellement stop une chanson en cours et la remplacer
@@ -350,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void changeBottomSheet(Song song) {
+    public void changeBottomSheetSong(Song song) {
         musicImage.setImageBitmap(song.getBitmap());
         songName.setText(song.getTitle());
         songArtistAndAlbum.setText(song.getArtist() + " - " + song.getAlbum());
@@ -398,10 +401,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void stopAudio() {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        if (serviceBound) {
-            unbindService(serviceConnection);
-            stopService(audioPlayerServiceIntent);
-        }
     }
 
     @Override
