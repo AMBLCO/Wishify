@@ -1,13 +1,19 @@
 package com.wishify;
 
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class Globals {
     private static List<Song> songsList = new ArrayList<>();
+
+    // TODO TEST THIS
+    private static HashMap<Uri, Song> songsMap = new HashMap<>();
+
     public static List<Song> queue = new ArrayList<>();
     public static int queuePos;
     public static boolean repeat;
@@ -77,4 +83,20 @@ public class Globals {
 
         shuffleListPos = -1;
     }
+
+    public static HashMap<Uri, Song> getSongsMap() {
+        return songsMap;
+    }
+
+    // CAREFUL
+    public static void setSongsMap(HashMap<Uri, Song> songsMap) {
+        Globals.songsMap = songsMap;
+    }
+
+    public static void addSongToMap(Song song)
+    {
+        songsMap.put(song.getUri(), song);
+    }
+
+
 }

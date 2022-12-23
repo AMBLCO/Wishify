@@ -27,8 +27,15 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +52,6 @@ public class FileDiscoveryService extends Service {
     public static final String CHANNEL_ID = "FileDiscoveryService";
     public static final int FILEDISCOVERY_NOTIFICATION_ID = 10;
     private static final MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-
 
     // Recursive find audio files
     private static void findAudioRecursive(Context appContext, File filePath, List<Song> songList)
@@ -92,6 +98,9 @@ public class FileDiscoveryService extends Service {
                             }
                             Log.d("FILES", "Adding song to list: " + title);
                             songList.add(new Song(Uri.fromFile(file), title, artist, album, duration, bitmap));
+                            // TODO HANDLE PLAYLISTS
+                            Globals.addSongToMap(new Song(Uri.fromFile(file), title, artist, album, duration, bitmap));
+
 
                         } catch (Exception e) {
                             Log.e("FILES", "Exception thrown during mmr.extractMetadata()");
@@ -213,12 +222,15 @@ public class FileDiscoveryService extends Service {
     {
         return Maybe.create(emitter -> {
 
-           //List<Song> audioFiles2 = findAudioFiles(appContext);
            List<Song> audioFiles = findAudioFilesFromNavig(appContext);
 
            Log.d("FILE_DISCOVERY", "Found " + audioFiles.size() + " songs");
            if (!audioFiles.isEmpty())
            {
+               // Start filling playlists before calling on success
+
+               findAndPopulatePlaylists(appContext);
+
                emitter.onSuccess(audioFiles);
            }
            else
@@ -226,5 +238,51 @@ public class FileDiscoveryService extends Service {
                emitter.onComplete();
            }
         });
+    }
+
+    private static void findAndPopulatePlaylists(Context appContext)
+    {
+        // Get playlists from file
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(appContext.openFileInput("playlists.txt"))))
+        {
+            String playlistName = reader.readLine();
+            if (playlistName != null)
+            {
+                List<Song> list = new ArrayList<>();
+                // We must fetch its songs
+                try(BufferedReader playlistReader = new BufferedReader(new InputStreamReader(appContext.openFileInput(playlistName + ".txt"))))
+                {
+                    String songUri = playlistReader.readLine();
+                    if (songUri != null)
+                    {
+                        Song song = Globals.getSongsMap().get(Uri.parse(songUri));
+                        if (song != null) list.add(song);
+                    }
+                }
+                catch(Exception e)
+                {
+                    Log.e("PLAYLISTS_FETCHER", "Exception thrown while reading playlist's songs");
+                }
+                Globals.addPlaylist(new Playlist(playlistName, list));
+
+            }
+
+        }
+        catch(java.io.FileNotFoundException e)
+        {
+            // Create playlists.txt
+            try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(appContext.openFileOutput("playlists.txt", Context.MODE_APPEND))))
+            {
+                // File has been created
+            }
+            catch(Exception ex)
+            {
+                Log.e("PLAYLISTS_WRITE_MAIN", "Catastrophic failure in writing of playlists.txt");
+            }
+        }
+        catch(IOException e)
+        {
+            Log.e("PLAYLISTS_FETCHER", "Exception thrown while reading playlists.txt");
+        }
     }
 }
