@@ -45,7 +45,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.getPlaylistImageView().setImageBitmap(playlistList.get(position).getSongs().get(0).getBitmap());
-        holder.getPlaylistNameView().setText(playlistList.get(position).getSongs().get(0).getTitle());
+        holder.getPlaylistNameView().setText(playlistList.get(position).getName());
     }
 
     @Override
