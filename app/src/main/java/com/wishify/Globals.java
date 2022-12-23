@@ -157,6 +157,7 @@ public class Globals {
         {
             // Cleanup
             playlists.remove(playlistName);
+            PlaylistsFragment.adapter.notifyDataSetChanged();
             return true;
         }
         else{
