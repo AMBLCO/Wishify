@@ -142,9 +142,14 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
                                 // add to this playlist
                                 if (Globals.getPlaylist(chosenItem.toString()) != null)
                                 {
-                                    Globals.getPlaylist(chosenItem.toString()).addSong(songList.get(getAdapterPosition()));
+                                    if(Globals.getPlaylist(chosenItem.toString()).addSong(songList.get(getAdapterPosition())) == 1)
+                                    {
+                                        Toast.makeText(view.getContext(), "Added " + songList.get(getAdapterPosition()).getTitle() + " to playlist!", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        Toast.makeText(view.getContext(), "Could not add " + songList.get(getAdapterPosition()).getTitle() + " to playlist!", Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                                Toast.makeText(view.getContext(), "Added " + songList.get(getAdapterPosition()).getTitle() + " to playlist!", Toast.LENGTH_SHORT).show();
                             }
                             return false;
                         });

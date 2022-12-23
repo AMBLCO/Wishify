@@ -253,14 +253,17 @@ public class FileDiscoveryService extends Service {
                 List<Song> list = new ArrayList<>();
                 // We must fetch its songs
                 try (BufferedReader playlistReader = new BufferedReader(new InputStreamReader(appContext.openFileInput(playlistName + ".txt")))) {
-                    String songUri = playlistReader.readLine();
-                    if (songUri != null) {
-                        Song song = Globals.getSongsMap().get(Uri.parse(songUri));
-                        if (song != null) {
-                            Log.d("PLAYLIST " + playlistName, "Found song: " + song.getTitle());
-                            list.add(song);
+                    String songUri;
+                    do {
+                        songUri = playlistReader.readLine();
+                        if (songUri != null) {
+                            Song song = Globals.getSongsMap().get(Uri.parse(songUri));
+                            if (song != null) {
+                                Log.d("PLAYLIST " + playlistName, "Found song: " + song.getTitle());
+                                list.add(song);
+                            }
                         }
-                    }
+                    } while(songUri != null);
                 } catch (Exception e) {
                     Log.e("PLAYLISTS_FETCHER", "Exception thrown while reading playlist's songs");
                 }
