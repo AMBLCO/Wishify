@@ -268,57 +268,5 @@ public class FileDiscoveryService extends Service {
             }
 
         }
-
-        /*
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(appContext.openFileInput("playlists.txt"))))
-        {
-            String playlistName = reader.readLine();
-            if (playlistName != null) {
-                do {
-                    playlistName = reader.readLine();
-                    if (playlistName != null) {
-                        Log.d("PLAYLISTS_FETCHER", "Found playlist: " + playlistName);
-                        List<Song> list = new ArrayList<>();
-                        // We must fetch its songs
-                        try (BufferedReader playlistReader = new BufferedReader(new InputStreamReader(appContext.openFileInput(playlistName + ".txt")))) {
-                            String songUri = playlistReader.readLine();
-                            if (songUri != null) {
-                                Song song = Globals.getSongsMap().get(Uri.parse(songUri));
-                                if (song != null) {
-                                    Log.d("PLAYLIST " + playlistName, "Found song: " + song.getTitle());
-                                    list.add(song);
-                                }
-                            }
-                        } catch (Exception e) {
-                            Log.e("PLAYLISTS_FETCHER", "Exception thrown while reading playlist's songs");
-                        }
-                        Globals.addPlaylist(new Playlist(playlistName, list));
-
-                    }
-                } while (playlistName != null);
-            }
-            else{
-                Log.d("PLAYLISTS_FETCHER", "playlists.txt is completely empty!");
-            }
-        }
-        catch(java.io.FileNotFoundException e)
-        {
-            // Create playlists.txt
-            try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(appContext.openFileOutput("playlists.txt", Context.MODE_APPEND))))
-            {
-                // File has been created
-                writer.write("");
-                Log.d("PLAYLISTS_FETCHER", "Created playlists.txt");
-            }
-            catch(Exception ex)
-            {
-                Log.e("PLAYLISTS_FETCHER", "Catastrophic failure in writing of playlists.txt");
-            }
-        }
-        catch(IOException e)
-        {
-            Log.e("PLAYLISTS_FETCHER", "Exception thrown while reading playlists.txt");
-        }
-        */
     }
 }
