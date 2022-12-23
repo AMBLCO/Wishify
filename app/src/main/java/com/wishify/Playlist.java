@@ -6,6 +6,7 @@ import android.util.Log;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.util.List;
+import java.util.Objects;
 
 public class Playlist {
     private final String name;
@@ -22,7 +23,16 @@ public class Playlist {
         return this.songs;
     }
 
-    public int addSong(Song song){
+    public int addSong(Song song)
+    {
+        // Quick check (could replace with hashmap)
+        for (Song inSong : songs)
+        {
+            if (Objects.equals(inSong.getTitle(), song.getTitle())) // Is duplicate
+            {
+                return 0;
+            }
+        }
 
         try {
             // Create file
