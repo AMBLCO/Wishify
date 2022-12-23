@@ -17,6 +17,8 @@ public class Playlist {
         return this.songs;
     }
 
+    public void addSong(Song song){ songs.add(song); }
+
     public String getName() {
         return this.name;
     }
