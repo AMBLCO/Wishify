@@ -21,4 +21,6 @@ public class AudioPlayer {
     public static void goNext() { mainActivity.goNext(); }
 
     public static void goPrevious() { mainActivity.goPrevious(); }
+
+    public static void seekTo(int pos) { mainActivity.seekTo(pos);}
 }

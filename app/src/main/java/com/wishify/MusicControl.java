@@ -4,11 +4,14 @@ import static com.wishify.AudioPlayer.goNext;
 import static com.wishify.AudioPlayer.goPrevious;
 import static com.wishify.AudioPlayer.pauseAudio;
 import static com.wishify.AudioPlayer.resumeAudio;
+import static com.wishify.AudioPlayer.seekTo;
 import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
+import static com.wishify.AudioPlayerService.mediaPlayer;
 import static com.wishify.Globals.queue;
 import static com.wishify.Globals.queuePos;
 import static com.wishify.Globals.toggleShuffle;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -33,6 +37,8 @@ public class MusicControl {
     private static ImageView songImage;
     private static TextView songName;
     private static TextView songArtistAndAlbum;
+    private static SeekBar seekbar;
+    private static TextView seekbarHint;
 
     private PopupWindow popupWindow;
 
@@ -62,8 +68,40 @@ public class MusicControl {
         songImage = popupView.findViewById(R.id.controlSongImage);
         songName = popupView.findViewById(R.id.controlSongName);
         songArtistAndAlbum = popupView.findViewById(R.id.controlSongArtistAndAlbum);
+        seekbar = popupView.findViewById(R.id.controlSeekbar);
+        seekbarHint = popupView.findViewById(R.id.controlSeekbarHint);
 
         updateMusicControl();
+        runSeekbarUpdate();
+
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if ((progress % 60000) / 1000 >= 10) seekbarHint.setText(progress / 60000 + ":" + (progress % 60000) / 1000);
+                else seekbarHint.setText(progress / 60000 + ":0" + (progress % 60000) / 1000);
+
+                double percent = progress / (double) seekBar.getMax();
+                int offset = seekBar.getThumbOffset();
+                seekbarHint.setX(offset + seekBar.getX() + (int) Math.round(percent * (seekBar.getWidth() - 2 * offset)) - Math.round(percent * offset) - Math.round(percent * seekbarHint.getWidth() / 2));
+
+                if (progress > 0 && getMediaPlayerStatus() != 2 && getMediaPlayerStatus() != 3) {
+                    seekBar.setProgress(0);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                seekbarHint.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (getMediaPlayerStatus() == 2) {
+                    seekTo(seekBar.getProgress());
+                }
+                seekbarHint.setVisibility(View.INVISIBLE);
+            }
+        });
 
         previousTrack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +174,34 @@ public class MusicControl {
         else repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_off));
         if (Globals.shuffle) shuffle.setImageDrawable(AppCompatResources.getDrawable(shuffle.getContext(), R.drawable.ic_shuffle_on));
         else shuffle.setImageDrawable(AppCompatResources.getDrawable(shuffle.getContext(), R.drawable.ic_shuffle_off));
+
+        seekbar.setMax(queue.get(queuePos).getDuration());
+        seekbar.setProgress(0);
+        seekbarHint.setVisibility(View.INVISIBLE);
+    }
+
+    public void runSeekbarUpdate() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("SEEKBAR_UPDATE", "Running");
+                int currentPosition = mediaPlayer.getCurrentPosition();
+                int total = mediaPlayer.getDuration();
+
+                while (mediaPlayer != null && mediaPlayer.isPlaying() && currentPosition < total) {
+                    try {
+                        Thread.sleep(1000);
+                        currentPosition = mediaPlayer.getCurrentPosition();
+                    } catch (Exception e) {
+                        return;
+                    }
+
+                    seekbar.setProgress(currentPosition);
+
+                }
+                Log.d("SEEKBAR_UPDATE", "Stopped");
+            }
+        }).start();
     }
 
     public void closePopup() { if (popupWindow.isShowing()) popupWindow.dismiss(); }

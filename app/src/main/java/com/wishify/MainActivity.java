@@ -335,7 +335,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void playAudio(Song song) {
-        audioPlayerServiceIntent.putExtra("file", song.getUri().toString());
         audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
         startService(audioPlayerServiceIntent);
 
@@ -378,6 +377,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void goPrevious() {
         audioPlayerServiceIntent.setAction("com.wishify.action.PREVIOUS");
+        startService(audioPlayerServiceIntent);
+    }
+
+    public void seekTo(int pos) {
+        audioPlayerServiceIntent.putExtra("pos", pos);
+        audioPlayerServiceIntent.setAction("com.wishify.action.SEEK");
         startService(audioPlayerServiceIntent);
     }
 

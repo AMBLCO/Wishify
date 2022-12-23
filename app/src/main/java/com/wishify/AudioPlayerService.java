@@ -24,7 +24,7 @@ import android.util.Log;
 import java.io.IOException;
 
 public class AudioPlayerService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
-    private static MediaPlayer mediaPlayer = new MediaPlayer(); // We want only one MediaPlayer running at a given time.
+    public static MediaPlayer mediaPlayer = new MediaPlayer(); // We want only one MediaPlayer running at a given time.
     private static int mediaPlayerStatus = 0; // Start in STATE_IDLE
 
     private int resumePosition;
@@ -35,8 +35,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
     private static final String ACTION_RESUME = "com.wishify.action.RESUME";
     private static final String ACTION_PREVIOUS = "com.wishify.action.PREVIOUS";
     private static final String ACTION_NEXT = "com.wishify.action.NEXT";
+    private static final String ACTION_SEEK = "com.wishify.action.SEEK";
 
-    private static final int STATE_IDLE = 0; // When constructor is done
+    private static final int STATE_IDLE = 0;
     private static final int STATE_PREPARED = 1;
     private static final int STATE_STARTED = 2;
     private static final int STATE_PAUSED = 3;
@@ -146,6 +147,8 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         if (intent.getAction().equals(ACTION_PREVIOUS)) goPrevious();
 
         if (intent.getAction().equals(ACTION_NEXT)) goNext();
+
+        if (intent.getAction().equals(ACTION_SEEK)) seekTo(intent.getIntExtra("pos",0));
 
         return START_REDELIVER_INTENT;
     }
@@ -284,8 +287,19 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    private void seekTo(int position) {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            mediaPlayerStatus = STATE_PAUSED;
+            mediaPlayer.seekTo(position);
+            mediaPlayer.start();
+            mediaPlayerStatus = STATE_STARTED;
+        }
+    }
+
     private void initMediaPlayer() {
         try {
+            Log.d("MEDIA_PLAYER", "INIT");
             mediaPlayer.setDataSource(getApplicationContext(), queue.get(queuePos).getUri());
             changeBottomSheet(queue.get(queuePos));
             updateMusicControl();

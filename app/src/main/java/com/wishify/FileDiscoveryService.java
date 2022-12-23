@@ -88,7 +88,7 @@ public class FileDiscoveryService extends Service {
                             if (artist == null) Log.e("FILES", "Artist is null!");
                             String album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
                             if (album == null) Log.e("FILES", "Album is null!");
-                            int duration = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000; // Extracted is in ms, we want seconds
+                            int duration = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)); // Extracted is in ms, we want seconds
                             if (duration == 0) Log.e("FILES", "Duration is 0!");
 
                             byte[] songImage = mmr.getEmbeddedPicture();
