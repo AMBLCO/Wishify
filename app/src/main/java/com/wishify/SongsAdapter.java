@@ -63,8 +63,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
         return songList.size();
     }
 
-    public void filterList(List<Song> filterlist) {
-        songList = filterlist;
+    public void filterList(List<Song> filterList) {
+        songList = filterList;
         notifyDataSetChanged();
     }
 

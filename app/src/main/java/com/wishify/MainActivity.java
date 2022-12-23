@@ -230,9 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (!songsFragment.isHidden()) {
-                    filter(newText);
-                }
+                filter(newText);
                 return false;
             }
         });
@@ -394,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
         {
             for(Song song : Globals.getSongsList())
             {
-                if(song.getTitle().toLowerCase().contains(text))
+                if(song.getTitle().toLowerCase().contains(text.toLowerCase()))
                 {
                     Globals.addToFilteredList(song);
                 }

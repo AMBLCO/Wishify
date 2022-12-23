@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SongsFragment extends Fragment {
     private RecyclerView recView;
-    private View view;
 
     // Maybe uncurse this
     public static SongsAdapter adapter;
@@ -36,7 +35,6 @@ public class SongsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        this.view = view;
         recView = view.findViewById(R.id.songs_rec_view);
         adapter = new SongsAdapter();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -45,8 +43,5 @@ public class SongsFragment extends Fragment {
         recView.setAdapter(adapter);
         DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), HORIZONTAL);
         recView.addItemDecoration(decoration);
-
-        registerForContextMenu(recView);
-
     }
 }
