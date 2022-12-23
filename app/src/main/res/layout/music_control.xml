@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:gravity="center">
+    android:paddingRight="10dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -14,11 +14,11 @@
         app:cardCornerRadius="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:gravity="center">
+            android:paddingRight="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,8 +46,9 @@
 
                 <ImageView
                     android:id="@+id/controlSongImage"
-                    android:layout_width="128dp"
-                    android:layout_height="128dp"
+                    android:layout_width="320dp"
+                    android:layout_height="320dp"
+                    android:layout_gravity="center"
                     android:layout_marginTop="8dp"
                     app:srcCompat="@drawable/ic_songs" />
 
@@ -57,7 +58,7 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/controlNextTrackButton"
+                        android:id="@+id/controlPreviousTrackButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
@@ -76,7 +77,7 @@
                         app:srcCompat="@drawable/ic_pause" />
 
                     <ImageButton
-                        android:id="@+id/controlPreviousTrackButton"
+                        android:id="@+id/controlNextTrackButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"

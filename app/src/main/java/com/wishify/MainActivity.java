@@ -1,6 +1,7 @@
 package com.wishify;
 
 import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
+import static com.wishify.Globals.addSongsToQueue;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         mBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MusicControl popUpClass = new MusicControl();
+                MusicControl popUpClass = new MusicControl(musicImage.getDrawable(), songName.getText().toString(), songArtistAndAlbum.getText().toString());
                 popUpClass.showPopupWindow(view);
             }
         });
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         playpause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getMediaPlayerStatus() != 3) pauseAudio();
+                if (getMediaPlayerStatus() == 2) pauseAudio();
 
                 if (getMediaPlayerStatus() == 3) resumeAudio();
             }
@@ -335,18 +336,22 @@ public class MainActivity extends AppCompatActivity {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         playpause.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_pause));
-        musicImage.setImageBitmap(song.getBitmap());
-        songName.setText(song.getTitle());
-        songArtistAndAlbum.setText(song.getArtist() + " - " + song.getAlbum());
+        changeBottomSheet(song);
 
         audioPlayerServiceIntent.putExtra("file", song.getUri().toString());
         audioPlayerServiceIntent.setAction("com.wishify.action.FORCE_PLAY"); // Lorsqu'on doit potentiellement stop une chanson en cours et la remplacer
         startService(audioPlayerServiceIntent);
 
-        //Check is service is active
+        //Check if service is active
         if (!serviceBound) {
             bindService(audioPlayerServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
+    }
+
+    public void changeBottomSheet(Song song) {
+        musicImage.setImageBitmap(song.getBitmap());
+        songName.setText(song.getTitle());
+        songArtistAndAlbum.setText(song.getArtist() + " - " + song.getAlbum());
     }
 
     public void pauseAudio() {
@@ -380,6 +385,14 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             songsFragment.adapter.filterList(filteredList);
+        }
+    }
+
+    public void stopAudio() {
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        if (serviceBound) {
+            unbindService(serviceConnection);
+            stopService(audioPlayerServiceIntent);
         }
     }
 

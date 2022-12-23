@@ -1,5 +1,7 @@
 package com.wishify;
 
+import static com.wishify.Globals.addSongsToQueue;
+import static com.wishify.Globals.queue;
 import static java.lang.String.valueOf;
 
 import android.media.Image;
@@ -75,6 +77,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
             songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
             songView.setOnClickListener(view -> {
                 AudioPlayer.playAudio(Globals.getSongsList().get(getAdapterPosition()));
+                addSongsToQueue(Globals.getSongsList().subList(getAdapterPosition(), Globals.getSongsList().size()));
             });
 
             songView.setOnLongClickListener(view ->

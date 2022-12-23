@@ -1,17 +1,42 @@
 package com.wishify;
 
+import static com.wishify.AudioPlayer.pauseAudio;
+import static com.wishify.AudioPlayer.resumeAudio;
+import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
+
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MusicControl {
 
     //PopupWindow display method
+
+    private ImageButton previousTrack;
+    private ImageButton playpause;
+    private ImageButton nextTrack;
+    private ImageView songImage;
+    private TextView songName;
+    private TextView songArtistAndAlbum;
+
+    private Drawable image;
+    private String name;
+    private String artistAndAlbum;
+
+    MusicControl(Drawable image, String name, String artistAndAlbum) {
+        this.image = image;
+        this.name = name;
+        this.artistAndAlbum = artistAndAlbum;
+    }
 
     public void showPopupWindow(final View view) {
         //Create a View object yourself through inflater
@@ -31,9 +56,16 @@ public class MusicControl {
         //Set the location of the window on the screen
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
-        ImageButton previousTrack = popupView.findViewById(R.id.controlPreviousTrackButton);
-        ImageButton playpause = popupView.findViewById(R.id.controlPlayPauseButton);
-        ImageButton nextTrack = popupView.findViewById(R.id.controlNextTrackButton);
+        previousTrack = popupView.findViewById(R.id.controlPreviousTrackButton);
+        playpause = popupView.findViewById(R.id.controlPlayPauseButton);
+        nextTrack = popupView.findViewById(R.id.controlNextTrackButton);
+        songImage = popupView.findViewById(R.id.controlSongImage);
+        songName = popupView.findViewById(R.id.controlSongName);
+        songArtistAndAlbum = popupView.findViewById(R.id.controlSongArtistAndAlbum);
+
+        songImage.setImageDrawable(image);
+        songName.setText(name);
+        songArtistAndAlbum.setText(artistAndAlbum);
 
         previousTrack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,8 +79,9 @@ public class MusicControl {
         playpause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (getMediaPlayerStatus() != 3) pauseAudio();
 
-                Toast.makeText(view.getContext(), "play pause", Toast.LENGTH_SHORT).show();
+                if (getMediaPlayerStatus() == 3) resumeAudio();
             }
         });
 

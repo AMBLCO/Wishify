@@ -8,15 +8,13 @@ import java.util.List;
 public class Globals
 {
     private static List<Song> songsList = new ArrayList<>();
+    public static List<Song> queue = new ArrayList<>();
 
     private static List<Playlist> playlists = new ArrayList<>();
 
-    public static void addToSongsList(List<Song> songs)
-    {
-        songsList.addAll(songs);
-        SongsFragment.adapter.setSongList(songsList); // Update local copy in SongsAdapter
-        SongsFragment.adapter.notifyDataSetChanged(); // OUCH
-        Log.d("GLOBALS", "Size of songsList is now " + songsList.size());
+    public static void addSongsToQueue(List<Song> songs) {
+        queue.clear();
+        queue.addAll(songs);
     }
 
     public static List<Song> getSongsList()
