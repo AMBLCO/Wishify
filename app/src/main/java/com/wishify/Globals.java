@@ -19,7 +19,6 @@ public class Globals {
 
     private static List<Song> songsList = new ArrayList<>();
 
-    // TODO TEST THIS
     private static HashMap<Uri, Song> songsMap = new HashMap<>();
 
     public static List<Song> queue = new ArrayList<>();

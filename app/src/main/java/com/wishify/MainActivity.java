@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final MusicControl popUpClass = new MusicControl();
 
-    private static FragmentManager fragMana;
+    private FragmentManager fragMana;
 
     private ImageButton playpause;
     private ImageView musicImage;
@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private AlbumsFragment albumsFragment;
     private SongsFragment songsFragment;
     private PlaylistsFragment playlistsFragment;
+    private PlaylistFragment playlistFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,16 +111,18 @@ public class MainActivity extends AppCompatActivity {
         albumsFragment = new AlbumsFragment();
         songsFragment = new SongsFragment();
         playlistsFragment = new PlaylistsFragment();
-
+        playlistFragment = new PlaylistFragment();
 
         fragMana.beginTransaction()
                 .add(R.id.mainFragmentContainerView, artistsFragment, "artists")
                 .add(R.id.mainFragmentContainerView, albumsFragment, "albums")
                 .add(R.id.mainFragmentContainerView, songsFragment, "songs")
                 .add(R.id.mainFragmentContainerView, playlistsFragment, "playlists")
+                .add(R.id.mainFragmentContainerView, playlistFragment, "playlist")
                 .hide(artistsFragment)
                 .hide(albumsFragment)
                 .hide(playlistsFragment)
+                .hide(playlistFragment)
                 .show(songsFragment)
                 .commit();
 
@@ -434,8 +437,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    public static FragmentManager getFragMana() {
-        return fragMana;
+    public void handlePlaylistFragment(String wantedPlaylist)
+    {
+        playlistFragment.setPlaylist(Globals.getPlaylist(wantedPlaylist));
+        // Must hide playlists Fragment
+        fragMana.beginTransaction()
+                .hide(playlistsFragment)
+                .show(playlistFragment)
+                .commit();
     }
+
 }

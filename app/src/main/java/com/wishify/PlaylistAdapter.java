@@ -26,7 +26,7 @@ import java.util.List;
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder>{
 
     private static Playlist playlist;
-    private static List<Song> songList = playlist.getSongs();
+    //private static List<Song> songList = playlist.getSongs();
     @NonNull
     @Override
     public PlaylistAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,22 +40,17 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public void onBindViewHolder(@NonNull PlaylistAdapter.ViewHolder holder, int position) {
         // Fetch from Audio File Discovery Service
 
-        holder.getSongImageView().setImageBitmap(songList.get(position).getBitmap());
-        holder.getSongNameView().setText(songList.get(position).getTitle());
+        holder.getSongImageView().setImageBitmap(playlist.getSongs().get(position).getBitmap());
+        holder.getSongNameView().setText(playlist.getSongs().get(position).getTitle());
 
-        String artNalb = songList.get(position).getArtist() + " - " + songList.get(position).getAlbum();
+        String artNalb = playlist.getSongs().get(position).getArtist() + " - " + playlist.getSongs().get(position).getAlbum();
 
         holder.getSongArtistAndAlbumView().setText(artNalb);
     }
 
     @Override
     public int getItemCount() {
-        return songList.size();
-    }
-
-    public void filterList(List<Song> filterList) {
-        this.songList = filterList;
-        notifyDataSetChanged();
+        return playlist.getSongs().size();
     }
 
 
@@ -71,8 +66,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
             songNameView = (TextView) songView.findViewById(R.id.songName);
             songArtistAndAlbumView = (TextView) songView.findViewById(R.id.songArtistAndAlbum);
             songView.setOnClickListener(view -> {
-                AudioPlayer.playAudio(songList.get(getAdapterPosition()));
-                addSongsToQueue(songList);
+                AudioPlayer.playAudio(playlist.getSongs().get(getAdapterPosition()));
+                addSongsToQueue(playlist.getSongs());
                 queuePos = getAdapterPosition();
             });
 
@@ -132,12 +127,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                                 // add to this playlist
                                 if (Globals.getPlaylist(chosenItem.toString()) != null)
                                 {
-                                    if(Globals.getPlaylist(chosenItem.toString()).addSong(songList.get(getAdapterPosition())) == 1)
+                                    if(Globals.getPlaylist(chosenItem.toString()).addSong(playlist.getSongs().get(getAdapterPosition())) == 1)
                                     {
-                                        Toast.makeText(view.getContext(), "Added " + songList.get(getAdapterPosition()).getTitle() + " to playlist!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(view.getContext(), "Added " + playlist.getSongs().get(getAdapterPosition()).getTitle() + " to playlist!", Toast.LENGTH_SHORT).show();
                                     }
                                     else{
-                                        Toast.makeText(view.getContext(), "Could not add " + songList.get(getAdapterPosition()).getTitle() + " to playlist!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(view.getContext(), "Could not add " + playlist.getSongs().get(getAdapterPosition()).getTitle() + " to playlist!", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }
@@ -148,12 +143,12 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
                     if (item.getItemId() == R.id.append)
                     {
-                        queue.add(songList.get(getAdapterPosition()));
+                        queue.add(playlist.getSongs().get(getAdapterPosition()));
                     }
 
                     if (item.getItemId() == R.id.playNext)
                     {
-                        queue.add(queuePos + 1, songList.get(getAdapterPosition()));
+                        queue.add(queuePos + 1, playlist.getSongs().get(getAdapterPosition()));
                     }
                     return false;
                 });
@@ -190,15 +185,11 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     public List<Song> getSongList() {
-        return songList;
+        return playlist.getSongs();
     }
 
-    public void setSongList(List<Song> songList) {
-        this.songList = songList;
-    }
-    public static void setPlaylist(String playlistName)
+    public void setPlaylist(Playlist playlist)
     {
-        playlist = Globals.getPlaylist(playlistName);
-        songList = playlist.getSongs();
+        this.playlist = playlist;
     }
 }
