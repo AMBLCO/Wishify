@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(albumsFragment)
                                 .hide(playlistsFragment)
                                 .hide(songsFragment)
+                                .hide(playlistsFragment)
                                 .commit();
 
                     }
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
                                 .show(albumsFragment)
                                 .hide(playlistsFragment)
                                 .hide(songsFragment)
+                                .hide(playlistsFragment)
                                 .commit();
                     }
                     return true;
@@ -172,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(albumsFragment)
                                 .hide(playlistsFragment)
                                 .show(songsFragment)
+                                .hide(playlistsFragment)
                                 .commit();
 
                         //SongsFragment songsFragment = ((SongsFragment) getSupportFragmentManager().findFragmentById(R.id.mainFragmentContainerView));
@@ -192,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(albumsFragment)
                                 .show(playlistsFragment)
                                 .hide(songsFragment)
+                                .hide(playlistsFragment)
                                 .commit();
 
                     }
