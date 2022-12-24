@@ -11,8 +11,6 @@ import static com.wishify.Globals.queue;
 import static com.wishify.Globals.queuePos;
 import static com.wishify.Globals.toggleShuffle;
 
-import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,6 +42,10 @@ public class MusicControl {
     private static PopupWindow popupWindow;
     private static Thread thread;
 
+    /**
+     * Called when we want the popup to be showed
+     * @param view
+     */
     public void showPopupWindow(final View view) {
         //Create a View object yourself through inflater
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
@@ -222,6 +224,9 @@ public class MusicControl {
         });
     }
 
+    /**
+     * Called when the popup needs to be updated
+     */
     public static void updateMusicControl() {
         songImage.setImageBitmap(queue.get(queuePos).getBitmap());
         songName.setText(queue.get(queuePos).getTitle());
@@ -241,13 +246,15 @@ public class MusicControl {
         seekbarHint.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Called when the seekbar will be updated
+     */
     public static void runSeekbarUpdate() {
         if (popupWindow != null)
         {
             thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d("SEEKBAR_UPDATE", "Running");
                     int currentPosition = mediaPlayer.getCurrentPosition();
                     int total = mediaPlayer.getDuration();
 
@@ -263,13 +270,15 @@ public class MusicControl {
                             seekbar.setProgress(currentPosition);
                         }
                     }
-                    Log.d("SEEKBAR_UPDATE", "Stopped");
                 }
             });
             thread.start();
         }
     }
 
+    /**
+     * Called when the seekbar shouldn't get updated
+     */
     public static void stopSeekbarUpdate() {
         if (thread != null)
         {
@@ -278,5 +287,8 @@ public class MusicControl {
         }
     }
 
+    /**
+     * Close the popup
+     */
     public void closePopup() { if (popupWindow.isShowing()) popupWindow.dismiss(); }
 }

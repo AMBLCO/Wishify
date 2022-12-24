@@ -101,6 +101,13 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     };
 
+    /**
+     * Called on start and receives the action from the intent and call the proper method
+     * @param intent
+     * @param flags
+     * @param startId
+     * @return
+     */
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (intent.getAction().equals(ACTION_PLAY)) playMedia();
@@ -126,7 +133,10 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         return iBinder;
     }
 
-    //Called when mediaplayer is ready
+    /**
+     * Called when media player is ready to play
+     * @param player
+     */
     public void onPrepared(MediaPlayer player) {
         mediaPlayerStatus = STATE_PREPARED;
         try {
@@ -140,6 +150,13 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
     }
 
 
+    /**
+     * Called when an error occurs with the media player, restart if possible
+     * @param mp
+     * @param what
+     * @param extra
+     * @return
+     */
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.e("AUDIO_PLAYER", "Audio player error");
@@ -157,26 +174,38 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         return true;
     }
 
+    /**
+     * Destroys the media player
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // We should probably not release MediaPlayer because it is frequently used
         if (mediaPlayer != null) {
             mediaPlayerStatus = STATE_END;
             mediaPlayer.release();
         }
     }
 
+    /**
+     * Returns the status of the media player
+     * @return
+     */
     public static int getMediaPlayerStatus() {
         return mediaPlayerStatus;
     }
 
+    /**
+     * Used to bind the media player to the MainActivity
+     */
     public class LocalBinder extends Binder {
         public AudioPlayerService getService() {
             return AudioPlayerService.this;
         }
     }
 
+    /**
+     * Sets up the media player and plays the song at the current queuePos
+     */
     private void playMedia() {
         // If a song is currently playing, stop it
         if (mediaPlayerStatus == STATE_STARTED || mediaPlayerStatus == STATE_PAUSED)
@@ -218,6 +247,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    /**
+     * Pause song
+     */
     private void pauseMedia() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayerStatus = STATE_PAUSED;
@@ -226,6 +258,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    /**
+     * Resume song
+     */
     private void resumeMedia() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.seekTo(resumePosition);
@@ -235,6 +270,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    /**
+     * Play next song
+     */
     private void goNext() {
         if (shuffle)
         {
@@ -269,6 +307,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    /**
+     * Play previous song
+     */
     private void goPrevious() {
         if (shuffle)
         {
@@ -303,6 +344,10 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    /**
+     * Seek to pos in song currently being played
+     * @param position
+     */
     private void seekTo(int position) {
         if (mediaPlayer.isPlaying()) {
             mediaPlayerStatus = STATE_PAUSED;

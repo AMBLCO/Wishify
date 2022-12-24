@@ -3,6 +3,8 @@ package com.wishify;
 import static com.wishify.Globals.addSongsToQueue;
 import static com.wishify.Globals.queue;
 import static com.wishify.Globals.queuePos;
+import static com.wishify.Globals.repeat;
+import static com.wishify.Globals.repeatStartPos;
 import static java.lang.String.valueOf;
 
 import android.app.Activity;
@@ -90,6 +92,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
                 AudioPlayer.playAudio(songList.get(getAdapterPosition()));
                 addSongsToQueue(songList);
                 queuePos = getAdapterPosition();
+                if (repeat == 1) repeatStartPos = getAdapterPosition();
             });
 
             songView.setOnLongClickListener(view ->
