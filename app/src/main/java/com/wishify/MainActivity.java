@@ -176,11 +176,6 @@ public class MainActivity extends AppCompatActivity {
                                 .show(songsFragment)
                                 .hide(playlistFragment)
                                 .commit();
-
-                        //SongsFragment songsFragment = ((SongsFragment) getSupportFragmentManager().findFragmentById(R.id.mainFragmentContainerView));
-                        //if (songsFragment != null) {
-                        //songsFragment.setmMainActivity(MainActivity.this);
-                        //}
                     }
                     return true;
                 }
@@ -197,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(songsFragment)
                                 .hide(playlistFragment)
                                 .commit();
-
                     }
                     return true;
                 }
@@ -252,14 +246,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Deploys async file discovery
+     */
     public void crawlAudioFiles()
     {
-        // Deploy FileDiscoveryWorker crawler
+        // Deploy async crawler
         Intent serviceIntent = new Intent(this, FileDiscoveryService.class);
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
-    // Permission manager
+    /**
+     * Checks for needed permissions
+     * @param perm wanted permission
+     * @param reqCode arbitrary code
+     */
     public void checkPerm(String perm, int reqCode)
     {
         if (reqCode == READ_EXTERNAL_STORAGE_CODE) {
@@ -339,6 +340,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Plays music
+     * @param song to be played
+     */
     public void playAudio(Song song) {
         audioPlayerServiceIntent.setAction("com.wishify.action.PLAY");
         startService(audioPlayerServiceIntent);
@@ -349,6 +354,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Manages sound menu
+     * @param song that is being played
+     */
     public void showAndUpdateBottomSheet(Song song) {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         playpause.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_pause));
@@ -375,22 +384,36 @@ public class MainActivity extends AppCompatActivity {
         popUpClass.closePopup();
     }
 
+    /**
+     * Next song
+     */
     public void goNext() {
         audioPlayerServiceIntent.setAction("com.wishify.action.NEXT");
         startService(audioPlayerServiceIntent);
     }
 
+    /**
+     * Previous song
+     */
     public void goPrevious() {
         audioPlayerServiceIntent.setAction("com.wishify.action.PREVIOUS");
         startService(audioPlayerServiceIntent);
     }
 
+    /**
+     * Go forward or backwards in a song
+     * @param pos wanted time
+     */
     public void seekTo(int pos) {
         audioPlayerServiceIntent.putExtra("pos", pos);
         audioPlayerServiceIntent.setAction("com.wishify.action.SEEK");
         startService(audioPlayerServiceIntent);
     }
 
+    /**
+     * Used for search feature
+     * @param text
+     */
     public void filter(String text)
     {
         Globals.clearFilteredList();
@@ -441,6 +464,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Displays wanted playlist when clicking a playlist
+     * @param wantedPlaylist playlist to be displayed
+     */
     public void handlePlaylistFragment(String wantedPlaylist)
     {
         playlistFragment.setPlaylist(Globals.getPlaylist(wantedPlaylist));
