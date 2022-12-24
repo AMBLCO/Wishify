@@ -7,7 +7,6 @@ import static com.wishify.AudioPlayer.resumeAudio;
 import static com.wishify.AudioPlayer.seekTo;
 import static com.wishify.AudioPlayerService.getMediaPlayerStatus;
 import static com.wishify.AudioPlayerService.mediaPlayer;
-import static com.wishify.Globals.prepared;
 import static com.wishify.Globals.queue;
 import static com.wishify.Globals.queuePos;
 import static com.wishify.Globals.toggleShuffle;
@@ -42,7 +41,8 @@ public class MusicControl {
     private static SeekBar seekbar;
     private static TextView seekbarHint;
 
-    private PopupWindow popupWindow;
+    private static PopupWindow popupWindow;
+    private static Thread thread;
 
     public void showPopupWindow(final View view) {
         //Create a View object yourself through inflater
@@ -108,13 +108,25 @@ public class MusicControl {
         previousTrack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final View view = v;
+                v.setEnabled(false);
+
                 goPrevious();
+
+                v.postDelayed(new Runnable(){
+                    public void run(){
+                        view.setEnabled(true);
+                    }
+                }, 1000);
             }
         });
 
         playpause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final View view = v;
+                v.setEnabled(false);
+
                 if (getMediaPlayerStatus() != 3) {
                     pauseAudio();
                     playpause.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_play));
@@ -124,19 +136,37 @@ public class MusicControl {
                     resumeAudio();
                     playpause.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_pause));
                 }
+
+                v.postDelayed(new Runnable(){
+                    public void run(){
+                        view.setEnabled(true);
+                    }
+                }, 1000);
             }
         });
 
         nextTrack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final View view = v;
+                v.setEnabled(false);
+
                 goNext();
+
+                v.postDelayed(new Runnable(){
+                    public void run(){
+                        view.setEnabled(true);
+                    }
+                }, 1000);
             }
         });
 
         repeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final View view = v;
+                v.setEnabled(false);
+
                 if (Globals.repeat == 0)
                 {
                     Globals.repeat = 1;
@@ -153,15 +183,30 @@ public class MusicControl {
                     Globals.repeat = 0;
                     repeat.setImageDrawable(AppCompatResources.getDrawable(repeat.getContext(), R.drawable.ic_repeat_off));
                 }
+
+                v.postDelayed(new Runnable(){
+                    public void run(){
+                        view.setEnabled(true);
+                    }
+                }, 1000);
             }
         });
 
         shuffle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final View view = v;
+                v.setEnabled(false);
+
                 toggleShuffle();
                 if (Globals.shuffle) shuffle.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_shuffle_on));
                 else shuffle.setImageDrawable(AppCompatResources.getDrawable(view.getContext(), R.drawable.ic_shuffle_off));
+
+                v.postDelayed(new Runnable(){
+                    public void run(){
+                        view.setEnabled(true);
+                    }
+                }, 1000);
             }
         });
 
@@ -196,29 +241,41 @@ public class MusicControl {
         seekbarHint.setVisibility(View.INVISIBLE);
     }
 
-    public void runSeekbarUpdate() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("SEEKBAR_UPDATE", "Running");
-                int currentPosition = mediaPlayer.getCurrentPosition();
-                int total = mediaPlayer.getDuration();
+    public static void runSeekbarUpdate() {
+        if (popupWindow != null)
+        {
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("SEEKBAR_UPDATE", "Running");
+                    int currentPosition = mediaPlayer.getCurrentPosition();
+                    int total = mediaPlayer.getDuration();
 
-                while (mediaPlayer != null && mediaPlayer.isPlaying() && currentPosition < total) {
-                    if (prepared)
-                    {
-                        try {
-                            Thread.sleep(40); //Smooth movement
-                            currentPosition = mediaPlayer.getCurrentPosition();
-                        } catch (Exception e) {
-                            return;
+                    while (mediaPlayer != null && currentPosition < total) {
+                        if (getMediaPlayerStatus() == 2)
+                        {
+                            try {
+                                Thread.sleep(100); //Smooth movement
+                                currentPosition = mediaPlayer.getCurrentPosition();
+                            } catch (Exception e) {
+                                return;
+                            }
+                            seekbar.setProgress(currentPosition);
                         }
-                        seekbar.setProgress(currentPosition);
                     }
+                    Log.d("SEEKBAR_UPDATE", "Stopped");
                 }
-                Log.d("SEEKBAR_UPDATE", "Stopped");
-            }
-        }).start();
+            });
+            thread.start();
+        }
+    }
+
+    public static void stopSeekbarUpdate() {
+        if (thread != null)
+        {
+            thread.interrupt();
+            thread = null;
+        }
     }
 
     public void closePopup() { if (popupWindow.isShowing()) popupWindow.dismiss(); }

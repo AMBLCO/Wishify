@@ -2,7 +2,6 @@ package com.wishify;
 
 import static com.wishify.AudioPlayer.changeBottomSheet;
 import static com.wishify.AudioPlayer.stopAudio;
-import static com.wishify.Globals.prepared;
 import static com.wishify.Globals.repeat;
 import static com.wishify.Globals.repeatStartPos;
 import static com.wishify.Globals.resetAndGenerateShuffleList;
@@ -11,6 +10,8 @@ import static com.wishify.Globals.queuePos;
 import static com.wishify.Globals.shuffle;
 import static com.wishify.Globals.shuffleList;
 import static com.wishify.Globals.shuffleListPos;
+import static com.wishify.MusicControl.runSeekbarUpdate;
+import static com.wishify.MusicControl.stopSeekbarUpdate;
 import static com.wishify.MusicControl.updateMusicControl;
 
 import android.app.Service;
@@ -57,7 +58,6 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             Log.d("AUDIO_PLAYER", "Done playing song");
             mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
             mediaPlayer.reset();
-            prepared = false;
             mediaPlayerStatus = STATE_IDLE;
 
             if (repeat == 2)
@@ -101,57 +101,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     };
 
-    private final MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
-        @Override
-        public void onPrepared(MediaPlayer mp) {
-            prepared = true;
-        }
-    };
-
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (intent.getAction().equals(ACTION_PLAY))
-        {
-            // If a song is currently playing, stop it
-            if (mediaPlayerStatus == STATE_STARTED || mediaPlayerStatus == STATE_PAUSED)
-            {
-                mediaPlayer.reset();
-                prepared = false;
-                mediaPlayerStatus = STATE_IDLE;
-            }
-
-            if (mediaPlayerStatus == STATE_IDLE) {
-
-                mediaPlayer.setAudioAttributes(
-                        new AudioAttributes.Builder()
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                                .setUsage(AudioAttributes.USAGE_MEDIA)
-                                .build()
-                );
-
-                mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-
-                // Assign callbacks
-                mediaPlayer.setOnCompletionListener(mediaPlayerOnCompletionListener);
-                mediaPlayer.setOnErrorListener(this); // Set the error listener to this
-                mediaPlayer.setOnPreparedListener(this);
-            }
-
-            if (mediaPlayerStatus == STATE_IDLE) {
-                try {
-                    mediaPlayer.setDataSource(getApplicationContext(), queue.get(queuePos).getUri());
-                    changeBottomSheet(queue.get(queuePos));
-                    mediaPlayerStatus = STATE_INITIALIZED;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    mediaPlayerStatus = STATE_ERROR;
-                }
-
-                if (shuffle) resetAndGenerateShuffleList();
-
-                mediaPlayer.prepareAsync(); // prepare async to not block main thread
-            }
-        }
+        if (intent.getAction().equals(ACTION_PLAY)) playMedia();
 
         if (intent.getAction().equals(ACTION_PAUSE) && mediaPlayerStatus == STATE_STARTED) pauseMedia();
 
@@ -184,6 +136,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         {
             mediaPlayerStatus = STATE_ERROR;
         }
+        if (player.isPlaying()) runSeekbarUpdate();
     }
 
 
@@ -196,9 +149,10 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         try {
             mediaPlayer = new MediaPlayer(); // Recreate MediaPlayer
             mediaPlayerStatus = STATE_IDLE;
+            playMedia();
         } catch(Exception e)
         {
-
+            Log.d("AUDIO_PLAYER", "Failed");
         }
         return true;
     }
@@ -208,10 +162,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         super.onDestroy();
         // We should probably not release MediaPlayer because it is frequently used
         if (mediaPlayer != null) {
-            mediaPlayer.release();
             mediaPlayerStatus = STATE_END;
+            mediaPlayer.release();
         }
-
     }
 
     public static int getMediaPlayerStatus() {
@@ -224,11 +177,52 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
         }
     }
 
+    private void playMedia() {
+        // If a song is currently playing, stop it
+        if (mediaPlayerStatus == STATE_STARTED || mediaPlayerStatus == STATE_PAUSED)
+        {
+            mediaPlayer.reset();
+            mediaPlayerStatus = STATE_IDLE;
+        }
+
+        if (mediaPlayerStatus == STATE_IDLE) {
+
+            mediaPlayer.setAudioAttributes(
+                    new AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+            );
+
+            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+
+            // Assign callbacks
+            mediaPlayer.setOnCompletionListener(mediaPlayerOnCompletionListener);
+            mediaPlayer.setOnErrorListener(this); // Set the error listener to this
+            mediaPlayer.setOnPreparedListener(this);
+        }
+
+        if (mediaPlayerStatus == STATE_IDLE) {
+            try {
+                mediaPlayer.setDataSource(getApplicationContext(), queue.get(queuePos).getUri());
+                changeBottomSheet(queue.get(queuePos));
+                mediaPlayerStatus = STATE_INITIALIZED;
+            } catch (IOException e) {
+                e.printStackTrace();
+                mediaPlayerStatus = STATE_ERROR;
+            }
+
+            if (shuffle) resetAndGenerateShuffleList();
+
+            mediaPlayer.prepareAsync(); // prepare async to not block main thread
+        }
+    }
+
     private void pauseMedia() {
         if (mediaPlayer.isPlaying()) {
+            mediaPlayerStatus = STATE_PAUSED;
             mediaPlayer.pause();
             resumePosition = mediaPlayer.getCurrentPosition();
-            mediaPlayerStatus = STATE_PAUSED;
         }
     }
 
@@ -237,6 +231,7 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             mediaPlayer.seekTo(resumePosition);
             mediaPlayer.start();
             mediaPlayerStatus = STATE_STARTED;
+            runSeekbarUpdate();
         }
     }
 
@@ -247,9 +242,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             if (shuffleListPos < shuffleList.size() - 1)
             {
                 Log.d("AUDIO_PLAYER", "Go next");
+                stopSeekbarUpdate();
                 mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
                 mediaPlayer.reset();
-                prepared = false;
                 mediaPlayerStatus = STATE_IDLE;
 
                 shuffleListPos++;
@@ -263,9 +258,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             if (queuePos < queue.size() - 1)
             {
                 Log.d("AUDIO_PLAYER", "Go next");
+                stopSeekbarUpdate();
                 mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
                 mediaPlayer.reset();
-                prepared = false;
                 mediaPlayerStatus = STATE_IDLE;
 
                 queuePos++;
@@ -281,9 +276,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             if (shuffleListPos > 0)
             {
                 Log.d("AUDIO_PLAYER", "Go previous");
+                stopSeekbarUpdate();
                 mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
                 mediaPlayer.reset();
-                prepared = false;
                 mediaPlayerStatus = STATE_IDLE;
 
                 shuffleListPos--;
@@ -297,9 +292,9 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
             if (queuePos > 0)
             {
                 Log.d("AUDIO_PLAYER", "Go previous");
+                stopSeekbarUpdate();
                 mediaPlayerStatus = STATE_PLAYBACK_COMPLETED;
                 mediaPlayer.reset();
-                prepared = false;
                 mediaPlayerStatus = STATE_IDLE;
 
                 queuePos--;
@@ -310,8 +305,8 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
 
     private void seekTo(int position) {
         if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
             mediaPlayerStatus = STATE_PAUSED;
+            mediaPlayer.pause();
             mediaPlayer.seekTo(position);
             mediaPlayer.start();
             mediaPlayerStatus = STATE_STARTED;
@@ -321,10 +316,10 @@ public class AudioPlayerService extends Service implements MediaPlayer.OnPrepare
     private void initMediaPlayer() {
         try {
             Log.d("MEDIA_PLAYER", "INIT");
+            mediaPlayerStatus = STATE_INITIALIZED;
             mediaPlayer.setDataSource(getApplicationContext(), queue.get(queuePos).getUri());
             changeBottomSheet(queue.get(queuePos));
             updateMusicControl();
-            mediaPlayerStatus = STATE_INITIALIZED;
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
