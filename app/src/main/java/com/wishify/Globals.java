@@ -33,6 +33,7 @@ public class Globals {
 
     private static final HashMap<String, Playlist> playlists = new HashMap<>();
 
+
     public static Context getAppContext() {
         return appContext;
     }
@@ -41,6 +42,10 @@ public class Globals {
         Globals.appContext = appContext;
     }
 
+    /**
+     * Adds songs to queue
+     * @param songs list of songs to add
+     */
     public static void addSongsToQueue(List<Song> songs) {
         queue.clear();
         queue.addAll(songs);
@@ -50,7 +55,10 @@ public class Globals {
         return songsList;
     }
 
-    // DO NOT USE UNLESS IN FileDiscoveryService
+    /**
+     * DO NOT USE UNLESS IN FileDiscoveryService
+     * @param songs overwrites existing songs
+     */
     public static void setSongsList(List<Song> songs) {
         songsList = songs;
         SongsFragment.adapter.setSongList(songsList);
@@ -71,6 +79,11 @@ public class Globals {
         filteredList.clear();
     }
 
+    /**
+     * Saves the playlist on the device
+     * @param playlist the playlist to be saved
+     * @return result code
+     */
     public static int addPlaylist(Playlist playlist)
     {
         try {
@@ -88,6 +101,11 @@ public class Globals {
 
     }
 
+    /**
+     * Actually writes stuff
+     * @param playlist
+     * @throws IOException
+     */
     private static void writePlaylistFile(Playlist playlist) throws IOException {
         try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(appContext.openFileOutput(playlist.getName() + ".txt", Context.MODE_PRIVATE))))
         {
@@ -102,6 +120,7 @@ public class Globals {
     }
 
     public static Playlist getPlaylist(String nameOfPlaylist) { return playlists.get(nameOfPlaylist); }
+
 
     public static void toggleShuffle() {
         if (shuffle)
@@ -147,6 +166,11 @@ public class Globals {
         return playlists;
     }
 
+    /**
+     * Deletes playlist file on device
+     * @param playlistName to be deleted
+     * @return success or not
+     */
     public static boolean deletePlaylist(String playlistName)
     {
         File dir = appContext.getFilesDir();

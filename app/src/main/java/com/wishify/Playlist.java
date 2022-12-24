@@ -26,16 +26,17 @@ public class Playlist {
         return new ArrayList<Song>(this.songs.values());
     }
 
+    /**
+     * Adds song to a given playlist
+     * @param song to be added
+     * @return result code
+     */
     public int addSong(Song song)
     {
-
-
-
         try {
             // Create file
             writeSongToPlaylistFile(song);
             songs.put(song.getUri(), song);
-            //PlaylistsFragment.adapter.notifyDataSetChanged();
             return 1;
         }
         catch(Exception e)
@@ -45,6 +46,10 @@ public class Playlist {
         }
     }
 
+    /**
+     * Saves song in playlist file
+     * @param song to be written
+     */
     private void writeSongToPlaylistFile(Song song) {
 
         try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(Globals.getAppContext().openFileOutput(name + ".txt", Context.MODE_APPEND))))
