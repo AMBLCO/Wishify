@@ -78,7 +78,6 @@ public class Globals {
             // Create file
             writePlaylistFile(playlist);
             playlists.put(playlist.getName(), playlist);
-            //PlaylistsFragment.adapter.notifyDataSetChanged();
             return 1;
         }
         catch(Exception e)
@@ -157,6 +156,7 @@ public class Globals {
         {
             // Cleanup
             playlists.remove(playlistName);
+            PlaylistsFragment.adapter.refresh();
             PlaylistsFragment.adapter.notifyDataSetChanged();
             return true;
         }
