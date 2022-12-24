@@ -445,6 +445,7 @@ public class MainActivity extends AppCompatActivity {
                 .hide(playlistsFragment)
                 .show(playlistFragment)
                 .commit();
+        playlistFragment.refresh();
     }
 
 }

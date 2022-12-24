@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public int getItemCount() {
         return playlist.getSongs().size();
     }
+
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -190,7 +192,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
     public void setPlaylist(Playlist playlist)
     {
-        this.playlist = playlist;
+        PlaylistAdapter.playlist = playlist;
         notifyDataSetChanged();
     }
+
+
+
 }
