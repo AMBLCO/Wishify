@@ -20,7 +20,7 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
-        recView = view.findViewById(R.id.playlists_rec_view);
+        recView = view.findViewById(R.id.playlist_rec_view);
         //adapter = new PlaylistAdapter();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recView.setLayoutManager(layoutManager);

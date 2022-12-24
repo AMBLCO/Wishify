@@ -191,5 +191,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public void setPlaylist(Playlist playlist)
     {
         this.playlist = playlist;
+        notifyDataSetChanged();
     }
 }
