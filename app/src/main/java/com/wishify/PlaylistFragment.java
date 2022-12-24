@@ -27,7 +27,6 @@ public class PlaylistFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
         recView = view.findViewById(R.id.playlist_rec_view);
-        //adapter = new PlaylistAdapter();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recView.setLayoutManager(layoutManager);
         recView.setItemAnimator(new DefaultItemAnimator());

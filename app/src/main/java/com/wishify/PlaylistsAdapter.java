@@ -58,6 +58,9 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
         return playlistList.size();
     }
 
+    /**
+     * Refreshes current cache
+     */
     public void refresh()
     {
         playlistList = new ArrayList<>(Globals.getPlaylists().values()); // Should implement cache instead of reloading all the time
@@ -77,7 +80,6 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
 
             playlistView.setOnClickListener(view -> {
                 // Open playlist
-                //PlaylistAdapter.setPlaylist(playlistList.get(getAdapterPosition()).getName());
                 MainActivity.getInstance().handlePlaylistFragment(playlistList.get(getAdapterPosition()).getName());
             });
 
