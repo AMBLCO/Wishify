@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class PlaylistFragment extends Fragment {
     private RecyclerView recView;
 
-    public static PlaylistAdapter adapter;
+    public static PlaylistAdapter adapter = new PlaylistAdapter();
 
     public PlaylistFragment()
     {
@@ -27,7 +27,7 @@ public class PlaylistFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState)
     {
         recView = view.findViewById(R.id.playlist_rec_view);
-        adapter = new PlaylistAdapter();
+        //adapter = new PlaylistAdapter();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recView.setLayoutManager(layoutManager);
         recView.setItemAnimator(new DefaultItemAnimator());
