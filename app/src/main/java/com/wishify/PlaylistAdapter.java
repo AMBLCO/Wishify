@@ -27,7 +27,7 @@ import java.util.List;
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder>{
 
     private static Playlist playlist;
-    //private static List<Song> songList = playlist.getSongs();
+
     @NonNull
     @Override
     public PlaylistAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -75,7 +75,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
             songView.setOnLongClickListener(view ->
             {
-                //Log.d("LONG_CLICK", "Registered long click");
+
                 PopupMenu popupMenu = new PopupMenu(view.getContext(), view, Gravity.END);
                 popupMenu.getMenuInflater().inflate(R.menu.songs_context_menu, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener( item -> {
