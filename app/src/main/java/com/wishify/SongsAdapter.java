@@ -184,37 +184,35 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 
         /**
          *
-         * @return Le imageView d'une chanson
+         * @return Le ImageView du viewholder d'une chanson
          */
         public ImageView getSongImageView() {
             return songImageView;
         }
 
-        public void setSongImageView(ImageView songImageView) {
-            this.songImageView = songImageView;
-        }
-
+        /**
+         *
+         * @return Le TextView du viewholder d'une chanson
+         */
         public TextView getSongNameView() {
             return songNameView;
         }
 
-        public void setSongNameView(TextView songNameView) {
-            this.songNameView = songNameView;
-        }
 
+        /**
+         *
+         * @return Le TextView du viewholder d'une chanson
+         */
         public TextView getSongArtistAndAlbumView() {
             return songArtistAndAlbumView;
         }
 
-        public void setSongArtistAndAlbumView(TextView songArtistAndAlbumView) {
-            this.songArtistAndAlbumView = songArtistAndAlbumView;
-        }
     }
 
-    public List<Song> getSongList() {
-        return songList;
-    }
-
+    /**
+     *
+     * @param songList Une liste de chansons qui va devenir la liste de chanson à afficher
+     */
     public void setSongList(List<Song> songList) {
         this.songList = songList;
     }
