@@ -26,7 +26,7 @@ import java.util.List;
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder>{
 
     private static Playlist playlist;
-    private static List<Song> songList;
+    private static List<Song> songList = playlist.getSongs();
     @NonNull
     @Override
     public PlaylistAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
