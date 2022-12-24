@@ -85,13 +85,9 @@ public class FileDiscoveryService extends Service {
                     if (Objects.equals(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE), "audio/mpeg")) {
                         try {
                             String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-                            if (title == null) Log.e("FILES", "Title is null!");
                             String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-                            if (artist == null) Log.e("FILES", "Artist is null!");
                             String album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-                            if (album == null) Log.e("FILES", "Album is null!");
                             int duration = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-                            if (duration == 0) Log.e("FILES", "Duration is 0!");
 
                             byte[] songImage = mmr.getEmbeddedPicture();
                             Bitmap bitmap = BitmapFactory.decodeResource(appContext.getResources(), R.drawable.ic_songs);
@@ -155,7 +151,6 @@ public class FileDiscoveryService extends Service {
                 public void onSuccess(@NonNull List<Song> songs)
                 {
                     // Send result to main SongList
-                    Log.d("FILE_DISCOVERY", "onSuccess() called with size " + songs.size());
                     Globals.setSongsList(songs);
                     stopSelf(); // Stop service
                 }
@@ -170,7 +165,6 @@ public class FileDiscoveryService extends Service {
                 @Override
                 public void onComplete()
                 {
-                    Log.d("FILE_DISCOVERY", "onComplete() called");
                     stopSelf(); // Stop service
                 }
             });
@@ -232,11 +226,9 @@ public class FileDiscoveryService extends Service {
 
            List<Song> audioFiles = findAudioFilesFromNavig(appContext);
 
-           Log.d("FILE_DISCOVERY", "Found " + audioFiles.size() + " songs");
            if (!audioFiles.isEmpty())
            {
                // Start filling playlists before calling on success
-               Log.d("PLAYLISTS_FETCHER", "Calling findAndPopulatePlaylists()");
                findAndPopulatePlaylists(appContext);
 
                emitter.onSuccess(audioFiles);
@@ -261,7 +253,6 @@ public class FileDiscoveryService extends Service {
             for (File file : files)
             {
                 String playlistName = file.getName().substring(0, file.getName().length() - 4); // Remove .txt the wish.com way
-                Log.d("PLAYLISTS_FETCHER", "Found playlist: " + playlistName);
                 HashMap<Uri, Song> list = new HashMap<>();
                 // We must fetch its songs
                 try (BufferedReader playlistReader = new BufferedReader(new InputStreamReader(appContext.openFileInput(playlistName + ".txt")))) {
@@ -271,13 +262,12 @@ public class FileDiscoveryService extends Service {
                         if (songUri != null) {
                             Song song = Globals.getSongsMap().get(Uri.parse(songUri));
                             if (song != null) {
-                                Log.d("PLAYLIST " + playlistName, "Found song: " + song.getTitle());
                                 list.put(song.getUri(), song);
                             }
                         }
                     } while(songUri != null);
                 } catch (Exception e) {
-                    Log.e("PLAYLISTS_FETCHER", "Exception thrown while reading playlist's songs");
+                    Log.e("PLAYLISTS_FETCHER", "Exception thrown while reading playlist's songs " + e.toString());
                 }
                 Globals.addPlaylist(new Playlist(playlistName, list));
             }
