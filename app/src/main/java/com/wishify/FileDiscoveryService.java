@@ -62,17 +62,13 @@ public class FileDiscoveryService extends Service {
      */
     private static void findAudioRecursive(Context appContext, File filePath, List<Song> songList)
     {
-        //Log.d("FILES", "songList is of size " + songList.size());
         File[] files = filePath.listFiles();
 
         if (files != null)
         {
             for (File file : files)
             {
-                //Log.d("FILES", "File Uri: " + Uri.fromFile(file));
-                //Log.d("FILES", "File path: " + file.getPath());
                 if (file.isDirectory()) {
-                    //Log.d("FILES", "File is directory");
                     findAudioRecursive(appContext, file, songList); // This hurts
                 }
                 else
@@ -94,7 +90,7 @@ public class FileDiscoveryService extends Service {
                             if (artist == null) Log.e("FILES", "Artist is null!");
                             String album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
                             if (album == null) Log.e("FILES", "Album is null!");
-                            int duration = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)); // Extracted is in ms, we want seconds
+                            int duration = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
                             if (duration == 0) Log.e("FILES", "Duration is 0!");
 
                             byte[] songImage = mmr.getEmbeddedPicture();
@@ -102,9 +98,7 @@ public class FileDiscoveryService extends Service {
                             if (songImage != null) {
                                 bitmap = BitmapFactory.decodeByteArray(songImage, 0, songImage.length);
                             }
-                            //Log.d("FILES", "Adding song to list: " + title);
                             songList.add(new Song(Uri.fromFile(file), title, artist, album, duration, bitmap));
-                            // TODO HANDLE PLAYLISTS
                             Globals.addSongToMap(new Song(Uri.fromFile(file), title, artist, album, duration, bitmap));
 
 
@@ -128,7 +122,6 @@ public class FileDiscoveryService extends Service {
         List<Song> songList = new ArrayList<>();
 
         File filePath = Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC);
-        //Log.d("FILES", "Path : " + filePath.getPath());
         File[] files = filePath.listFiles();
 
         if (files != null) {
@@ -191,7 +184,6 @@ public class FileDiscoveryService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //String input = intent.getStringExtra("inputExtra");
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
@@ -204,7 +196,6 @@ public class FileDiscoveryService extends Service {
                 .build();
         startForeground(FILEDISCOVERY_NOTIFICATION_ID, notification);
 
-        // WORK HERE
         work(getApplicationContext());
         return START_NOT_STICKY;
     }
