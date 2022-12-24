@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final MusicControl popUpClass = new MusicControl();
 
-    private FragmentManager fragMana;
+    private static FragmentManager fragMana;
 
     private ImageButton playpause;
     private ImageView musicImage;
@@ -111,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
         songsFragment = new SongsFragment();
         playlistsFragment = new PlaylistsFragment();
 
-        // Variables
-
 
         fragMana.beginTransaction()
                 .add(R.id.mainFragmentContainerView, artistsFragment, "artists")
@@ -158,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(playlistsFragment)
                                 .hide(songsFragment)
                                 .commit();
-
                     }
                     return true;
                 }
@@ -437,4 +434,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public static FragmentManager getFragMana() {
+        return fragMana;
+    }
 }

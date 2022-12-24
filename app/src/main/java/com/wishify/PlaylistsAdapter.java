@@ -60,7 +60,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
 
     public void refresh()
     {
-        playlistList = new ArrayList<>(Globals.getPlaylists().values());
+        playlistList = new ArrayList<>(Globals.getPlaylists().values()); // Should implement cache instead of reloading all the time
     }
 
 
