@@ -50,7 +50,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Fetch from Audio File Discovery Service
+
 
         holder.getSongImageView().setImageBitmap(songList.get(position).getBitmap());
         holder.getSongNameView().setText(songList.get(position).getTitle());
