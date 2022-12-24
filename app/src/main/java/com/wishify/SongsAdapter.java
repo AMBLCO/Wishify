@@ -65,6 +65,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
         return songList.size();
     }
 
+    /**
+     *
+     * @param filterList La liste de chansons filtrée à la suite de la recherche
+     */
     public void filterList(List<Song> filterList) {
         songList = filterList;
         notifyDataSetChanged();
@@ -178,7 +182,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
         }
 
 
-
+        /**
+         *
+         * @return Le imageView d'une chanson
+         */
         public ImageView getSongImageView() {
             return songImageView;
         }
