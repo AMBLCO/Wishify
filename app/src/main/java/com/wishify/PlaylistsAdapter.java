@@ -77,6 +77,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
 
             playlistView.setOnClickListener(view -> {
                 // Open playlist
+                PlaylistAdapter.setPlaylist(playlistList.get(getAdapterPosition()).getName());
             });
 
             playlistView.setOnLongClickListener(view ->

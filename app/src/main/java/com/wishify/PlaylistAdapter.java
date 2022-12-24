@@ -54,7 +54,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     }
 
     public void filterList(List<Song> filterList) {
-        songList = filterList;
+        this.songList = filterList;
         notifyDataSetChanged();
     }
 
@@ -196,7 +196,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public void setSongList(List<Song> songList) {
         this.songList = songList;
     }
-    public void setPlaylist(String playlistName)
+    public static void setPlaylist(String playlistName)
     {
         playlist = Globals.getPlaylist(playlistName);
         songList = playlist.getSongs();
