@@ -54,7 +54,12 @@ public class FileDiscoveryService extends Service {
     public static final int FILEDISCOVERY_NOTIFICATION_ID = 10;
     private static final MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 
-    // Recursive find audio files
+    /**
+     * Recursive find audio files
+     * @param appContext Application Context
+     * @param filePath Path to file
+     * @param songList List of songs
+     */
     private static void findAudioRecursive(Context appContext, File filePath, List<Song> songList)
     {
         //Log.d("FILES", "songList is of size " + songList.size());
@@ -112,7 +117,12 @@ public class FileDiscoveryService extends Service {
         }
     }
 
-    // Recursive search initiator
+
+    /**
+     * Initiates recursive search
+     * @param appContext Application context
+     * @return List of songs
+     */
     private static List<Song> findAudioFilesFromNavig(Context appContext)
     {
         List<Song> songList = new ArrayList<>();
@@ -132,7 +142,10 @@ public class FileDiscoveryService extends Service {
     }
 
 
-
+    /**
+     * Manages work
+     * @param appContext Application context
+     */
     private void work(Context appContext)
     {
         Maybe<List<Song>> maybe = createMaybe(appContext);
@@ -207,6 +220,9 @@ public class FileDiscoveryService extends Service {
         return null;
     }
 
+    /**
+     * Creates notifications
+     */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
@@ -241,6 +257,10 @@ public class FileDiscoveryService extends Service {
         });
     }
 
+    /**
+     * Handles reading playlist files
+     * @param appContext Application context
+     */
     private static void findAndPopulatePlaylists(Context appContext)
     {
         // Get playlists from file
