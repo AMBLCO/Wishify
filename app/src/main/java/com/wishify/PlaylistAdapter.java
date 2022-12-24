@@ -108,7 +108,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                                         if (Globals.getPlaylists().get(playlistName) == null) {
 
                                             if (!playlistName.equals("")) {
-                                                if (Globals.addPlaylist(new Playlist(playlistName, new HashMap<Uri, Song>())) == 1) { // 1 Means success
+                                                Song song = playlist.getSongs().get(getAdapterPosition());
+                                                HashMap<Uri, Song> hashMap = new HashMap<>();
+                                                hashMap.put(song.getUri(), song);
+                                                if (Globals.addPlaylist(new Playlist(playlistName, hashMap)) == 1) { // 1 Means success
                                                     Toast.makeText(view.getContext(), "Added " + playlistName + " to playlists", Toast.LENGTH_LONG).show();
                                                 } else {
                                                     Toast.makeText(view.getContext(), "Could not create playlist!", Toast.LENGTH_LONG).show();
